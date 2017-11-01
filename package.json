@@ -18,7 +18,8 @@
   },
   "homepage": "https://github.com/VonSwirl/OrderServices#readme",
   "dependencies": {
-    "express": "^4.16.2"
+    "express": "^4.16.2",
+    "mongoose": "^4.12.6"
   },
   "devDependencies": {
     "nodemon": "^1.12.1"
