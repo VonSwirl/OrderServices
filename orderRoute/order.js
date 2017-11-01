@@ -11,7 +11,7 @@ rOut.get('/orderList/:custDetails', function (req, res, next) {
     res.send({ type: 'GET' });
 });
 
-//
+//Purely testing
 rOut.get('/testGet', function (req, res, next) {
     res.send({ type: 'GET' });
 });

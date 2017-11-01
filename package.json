@@ -19,5 +19,8 @@
   "homepage": "https://github.com/VonSwirl/OrderServices#readme",
   "dependencies": {
     "express": "^4.16.2"
+  },
+  "devDependencies": {
+    "nodemon": "^1.12.1"
   }
 }
