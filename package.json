@@ -1,0 +1,23 @@
+{
+  "name": "OrderServices",
+  "version": "1.0.0",
+  "description": "Software Architecture Sub-Project. OrderService represents a micro service webapp which is part of a larger project. It is a standalone component in its own right.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/VonSwirl/OrderServices.git"
+  },
+  "keywords": [],
+  "author": "Jerome Hurley",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/VonSwirl/OrderServices/issues"
+  },
+  "homepage": "https://github.com/VonSwirl/OrderServices#readme",
+  "dependencies": {
+    "express": "^4.16.2"
+  }
+}
