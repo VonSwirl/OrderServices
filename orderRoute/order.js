@@ -20,53 +20,36 @@ rOut.post('/makeOrder', function (req, res, next) {
     //orderDM.save();
 });
 
-//
-rOut.get('/orderList/:custDetails', function (req, res, next) {
+//Accesses the db to allow the user or staff to view the customers order history.
+rOut.get('/orderList/:custoRef', function (req, res, next) {
     res.send({ type: 'GET' });
 });
 
-//
-rOut.put('/orderComplete/:id', function (req, res, next) {
-    res.send({ type: 'PUT' });
+//Recieves Order Complete from processing service, orderStatus updated in db.
+rOut.put('/update/:orderRef', function (req, res, next) {
+    Order.findOneAndUpdate({ orderRef: req.params.orderRef }, req.body).then(function (order) {
+        Order.findOne({ orderRef: req.params.orderRef }.then(function (order) {
+            res.send(order);
+        }));
+    });
 });
+/* //Recieves Order Complete from processing service, orderStatus updated in db.
+rOut.put('/orderComplete/:orderRef', function (req, res, next) {
+    Order.findByIdAndUpdate({ orderRef: req.params.orderRef }, req.body).then(function () {
+        Order.findOne({ orderRef: req.params.orderRef }.then(function (order) {
+            res.send(order);
+        }));
+    });
+}); */
 
-//
-rOut.post('/orderComplete/:id', function (req, res, next) {
+//This post request hands the processing service an Order which needs to be completed
+rOut.post('/completeOrder/:id', function (req, res, next) {
     res.send({ type: 'POST' });
 });
 
-//Testing
-rOut.get('/testGet', function (req, res, next) {
-    res.send({ type: 'GET' });
-});
-
-//TESTING
-rOut.post('/orderComplete', function (req, res, next) {
-    res.send({ type: 'POST' });
-});
-
-//Testing
-rOut.put('/testComplete/:id', function (req, res, next) {
-    res.send({ type: 'PUT' });
-});
-
-//Testing
-rOut.delete('/testComplete/:id', function (req, res, next) {
+//Delete available for future use, not required at this stage.
+rOut.delete('', function (req, res, next) {
     res.send({ type: 'DELETE' });
 });
 
 module.exports = rOut;
-
-//JSON OBJECT TESTING
-/* {
-{
-"orderRef": "123456789",
-"orderDate": "01/01/2001",
-"orderStatus": "Delivered",
-"orderPrice": "1.23",
-"products": [ "electronics", "sports", "music" ],
-"custoRef": "ABC123",
-"custoName": "john smith",
-"custoAddress": "10 downing street TW1 1AA",
-"custoAuth": "true"
-} */

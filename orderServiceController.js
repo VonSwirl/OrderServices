@@ -21,6 +21,9 @@ app.use('/order', require('./orderRoute/order'));
 
 //Middleware error handler
 app.use(function (err, req, res, next) {
+    
+    //Returns the error in String form to the user 
+    res.status(422).send({ error: err.message });
     console.log(err);
 });
 
