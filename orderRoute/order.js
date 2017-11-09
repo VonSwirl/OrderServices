@@ -1,11 +1,29 @@
-//Constraints below are dependencies required by this controller.
+//Constraints below are dependencies required by this routing file.
 const express = require('express');
 const rOut = express.Router();
-
+//Allows Parsing, validating, manipulation, and to display dates and times in JS.
+const moment = require('moment');
 //Allows access to our order Data Model
 const Order = require('../domainModels/orderModel');
 
-//Get information to create a new order from the purchasing service
+
+
+var nextId = function (callback) {
+    function prefix(date) {
+
+        var blah = parseInt(moment(date).format('YYMMDD'));
+        console.log();
+
+        return blah;
+    }
+};
+
+
+
+
+/** 
+* Get information to create a new order from the purchasing service
+*/
 rOut.post('/makeOrder', function (req, res, next) {
     Order.create(req.body).then(function (order) {
         console.log(req.body);
@@ -25,22 +43,24 @@ rOut.get('/orderList/:custoRef', function (req, res, next) {
     res.send({ type: 'GET' });
 });
 
-//Recieves Order Complete from processing service, orderStatus updated in db.
-rOut.put('/update/:orderRef', function (req, res, next) {
-    Order.findOneAndUpdate({ orderRef: req.params.orderRef }, req.body).then(function (order) {
-        Order.findOne({ orderRef: req.params.orderRef }.then(function (order) {
-            res.send(order);
-        }));
-    });
+
+/**
+ * Recieves Order Complete from processing service, orderStatus updated in db.
+ */
+rOut.put('/PurchasingUpdate/:orderRef', function (req, res, next) {
+    var oRef = req.params.orderRef;
+    Order.findOne({ orderRef: oRef }).update(req.body).then(function () {
+        res.send('Order Ref: ' + oRef + '\nSuccessfully Updated');
+    }).catch(next);
 });
-/* //Recieves Order Complete from processing service, orderStatus updated in db.
-rOut.put('/orderComplete/:orderRef', function (req, res, next) {
-    Order.findByIdAndUpdate({ orderRef: req.params.orderRef }, req.body).then(function () {
-        Order.findOne({ orderRef: req.params.orderRef }.then(function (order) {
-            res.send(order);
-        }));
-    });
+/*     {
+        order.update(req.body);
+        order.save();
+
+
+    }).catch(next);
 }); */
+
 
 //This post request hands the processing service an Order which needs to be completed
 rOut.post('/completeOrder/:id', function (req, res, next) {

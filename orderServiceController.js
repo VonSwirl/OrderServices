@@ -4,7 +4,7 @@ const express = require('express');
 const mong = require('mongoose');
 
 //Sets up an instance of Express.js .
-const app = express();
+const expressApp = express();
 
 //Connection to Mongodb via mongoose
 mong.connect('mongodb://localhost/orders');
@@ -13,14 +13,14 @@ mong.connect('mongodb://localhost/orders');
 mong.Promise = global.Promise;
 
 //Allows Express to use body-parser tool to handle our JSON data.
-app.use(bodPars.json());
+expressApp.use(bodPars.json());
 
 //Allows Express access to order.js for HTTP verb functions. 
-app.use('/order', require('./orderRoute/order'));
+expressApp.use('/order', require('./orderRoute/order'));
 
 
 //Middleware error handler
-app.use(function (err, req, res, next) {
+expressApp.use(function (err, req, res, next) {
     
     //Returns the error in String form to the user 
     res.status(422).send({ error: err.message });
@@ -28,6 +28,6 @@ app.use(function (err, req, res, next) {
 });
 
 //Request Listener
-app.listen(4000, function () {
+expressApp.listen(4000, function () {
     console.log("Response from orderServiceController");
 });
