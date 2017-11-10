@@ -18,10 +18,14 @@ expressApp.use(bodPars.json());
 //Allows Express access to order.js for HTTP verb functions. 
 expressApp.use('/order', require('./orderRoute/order'));
 
-
-//Middleware error handler
+/**
+ * Middleware which handles errors on the rejection of a promise
+ * @param err this is the error message
+ * @param req this is what was requested from the client
+ * @param res is the response given back to client
+ */
 expressApp.use(function (err, req, res, next) {
-    
+
     //Returns the error in String form to the user 
     res.status(422).send({ error: err.message });
     console.log(err);
@@ -29,5 +33,5 @@ expressApp.use(function (err, req, res, next) {
 
 //Request Listener
 expressApp.listen(4000, function () {
-    console.log("Response from orderServiceController");
+    console.log("Argh! WebApp Listening on Port 4000 Captain");
 });

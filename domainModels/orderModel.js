@@ -13,7 +13,7 @@ const productSchema = new Schema({
 
 //Create order domain model and schema
 const orderSchema = new Schema({
-    orderRef: { type: Number },
+    orderRef: { type: String },
     orderDate: { type: Date },
     products: [productSchema],
     stocked: {type: Boolean},

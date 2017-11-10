@@ -1,48 +1,43 @@
 //Constraints below are dependencies required by this routing file.
 const express = require('express');
 const rOut = express.Router();
-//Allows Parsing, validating, manipulation, and to display dates and times in JS.
-const moment = require('moment');
+
 //Allows access to our order Data Model
 const Order = require('../domainModels/orderModel');
 
-
-
-var nextId = function (callback) {
-    function prefix(date) {
-
-        var blah = parseInt(moment(date).format('YYMMDD'));
-        console.log();
-
-        return blah;
-    }
-};
-
-
-
+//Allows Parsing, validating, manipulation, and to display dates and times in JS.
+const moment = require('moment');
 
 /** 
-* Get information to create a new order from the purchasing service
-*/
+ * @const rOut.post  Recieves JSON some of the required data from the Stock service to 
+ * create a new order
+ */
 rOut.post('/makeOrder', function (req, res, next) {
+
+    //This variable creates 1 part of the unique Order Reference required my the orderModel
+    var partTwo = moment().format('DDMMYYhmmss');
+
     Order.create(req.body).then(function (order) {
-        console.log(req.body);
+        //This variable creates the 2nd part of unique ref
+        var partOne = order.custoRef;
+        this.order.orderRef = partOne + partTwo;
+        console.log(order.orderRef);
+
+        console.log(order.orderRef);
         res.send(order);
-        /* res.send({
-            type: 'POST',
-            orderRef: req.body.orderRef,
-            custoName: req.body.custoName
-        }); */
     }).catch(next);
-    //var orderDM = new Order(req.body);
-    //orderDM.save();
+
 });
+/* res.send({
+                type: 'POST',
+                orderRef: req.body.orderRef,
+                custoName: req.body.custoName
+}); */
 
 //Accesses the db to allow the user or staff to view the customers order history.
 rOut.get('/orderList/:custoRef', function (req, res, next) {
     res.send({ type: 'GET' });
 });
-
 
 /**
  * Recieves Order Complete from processing service, orderStatus updated in db.
