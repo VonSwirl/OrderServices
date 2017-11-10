@@ -32,6 +32,6 @@ expressApp.use(function (err, req, res, next) {
 });
 
 //Request Listener
-expressApp.listen(4000, function () {
+expressApp.listen(3004, function () {
     console.log("Argh! WebApp Listening on Port 4000 Captain");
 });
