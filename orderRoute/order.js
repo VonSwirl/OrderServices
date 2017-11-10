@@ -15,24 +15,29 @@ const moment = require('moment');
 rOut.post('/makeOrder', function (req, res, next) {
 
     //This variable creates 1 part of the unique Order Reference required my the orderModel
-    var partTwo = moment().format('DDMMYYhmmss');
+    var partTwo = moment().format('DDMMYYhm');
 
-    Order.create(req.body).then(function (order) {
-        //This variable creates the 2nd part of unique ref
-        var partOne = order.custoRef;
-        this.order.orderRef = partOne + partTwo;
-        console.log(order.orderRef);
+    //This variable creates the 2nd part of unique ref
+    var partOne = ('CUS/' + req.body.custoRef+'/ORD/');
+    var unique = partOne + partTwo;
+    req.body.orderRef = unique;
+    var oRef = req.body.orderRef;
 
-        console.log(order.orderRef);
-        res.send(order);
-    }).catch(next);
+    //Adds date to the order
+    req.body.orderDate = moment().format('llll');
 
+    //Checks if there is already an order making this reference number
+    Order.count({ orderRef: oRef }, function (err, count) {
+        if (count > 0) {
+            res.send('Order Already Exists\n' + 'orderRef: ' + unique);
+
+        } else {
+            Order.create(req.body).then(function (order) {
+                res.send('Order Created\n' + 'orderRef: ' + unique);
+            }).catch(next);
+        }
+    });
 });
-/* res.send({
-                type: 'POST',
-                orderRef: req.body.orderRef,
-                custoName: req.body.custoName
-}); */
 
 //Accesses the db to allow the user or staff to view the customers order history.
 rOut.get('/orderList/:custoRef', function (req, res, next) {
