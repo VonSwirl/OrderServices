@@ -1,0 +1,36 @@
+
+
+
+
+    /*  Order.findOne({orderRef: req.params.orderRef})
+     .then(function (order) {
+         Order.findOne({
+             products: { $elemMatch: { ean: req.body.ean } },
+ 
+         }).then(function (products) {
+             console.log(products);
+             //order.distinct("item.sku", { dept: "A" })
+             res.send('Products Stock Level Updated');
+ 
+         }).catch(next);
+     }); */
+
+    /*     Order.findOneAndUpdate({
+                orderRef: req.params.orderRef,
+                products: { $elemMatch: { ean: req.body.ean } }
+            },
+                {
+                    $set: {
+                        "products.$.nowAvailable": true,
+                        "products.$.stockQty": "order.products.$.qtyReq.value"
+                    }
+                }
+            ).then(function () {
+                Order.findOne({
+                    orderRef: req.params.orderRef
+                }
+                ).then(function (order) {
+                    console.log(order);
+                    res.send('Products Stock Level Updated');
+                });
+            }).catch(next); */
