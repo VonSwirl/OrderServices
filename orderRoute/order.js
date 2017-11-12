@@ -18,7 +18,7 @@ rOut.post('/makeOrder', function (req, res, next) {
     var partTwo = moment().format('DDMMYYhm');
 
     //This variable creates the 2nd part of unique ref
-    var partOne = ('CUS/' + req.body.custoRef+'/ORD/');
+    var partOne = (req.body.custoRef);
     var unique = partOne + partTwo;
     req.body.orderRef = unique;
     var oRef = req.body.orderRef;
@@ -48,19 +48,21 @@ rOut.get('/orderList/:custoRef', function (req, res, next) {
  * Recieves Order Complete from processing service, orderStatus updated in db.
  */
 rOut.put('/PurchasingUpdate/:orderRef', function (req, res, next) {
-    var oRef = req.params.orderRef;
-    Order.findOne({ orderRef: oRef }).update(req.body).then(function () {
-        res.send('Order Ref: ' + oRef + '\nSuccessfully Updated');
+    Order.findOneAndUpdate(
+        {
+            orderRef: req.params.orderRef,
+            products: { $elemMatch: { ean: req.body.ean } }
+        },
+        {
+            $set: { "products.$.nowAvailable": false }
+        }
+
+    ).then(function (order) {
+
+        console.log(order);
+        res.send('Products Stock Level Updated');
     }).catch(next);
 });
-/*     {
-        order.update(req.body);
-        order.save();
-
-
-    }).catch(next);
-}); */
-
 
 //This post request hands the processing service an Order which needs to be completed
 rOut.post('/completeOrder/:id', function (req, res, next) {
