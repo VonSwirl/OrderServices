@@ -35,7 +35,8 @@ COMPLETE JSON ORDER STRUCTURE:{
          "description":"AAAAAA",
          "productPrice":"1.00",
          "qtyReq":"10",
-         "stockQty":"9"
+         "stockQty":"9",
+		 
       },
       {  
          "ean":"222222",
@@ -112,7 +113,6 @@ JSON STRUCTURE FOR PURCHASING SERVICE:(Chris){
       }
    ]
 }
-
 
 
 
