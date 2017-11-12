@@ -28,8 +28,6 @@ MONGODB:
 
 
 COMPLETE JSON ORDER STRUCTURE:{  
-	"orderRef":"123456789",
-    "orderDate":"01/01/2001",
 	"products":[
       {  
          "ean":"111111",
@@ -37,7 +35,8 @@ COMPLETE JSON ORDER STRUCTURE:{
          "description":"AAAAAA",
          "productPrice":"1.00",
          "qtyReq":"10",
-         "stockQty":"9"
+         "stockQty":"9",
+		 
       },
       {  
          "ean":"222222",
@@ -50,9 +49,9 @@ COMPLETE JSON ORDER STRUCTURE:{
    ],
    "stocked": "true",
    "orderStatus":"Delivered",
-   "custoRef":"ABC123EFG",
+   "custoRef":"LLLLLLLLLLLLLLLLLLLLLLLL",
    "custoAuth":"true",
-   "orderTotal":""
+   "orderTotal":"0.00"
 }
 
 
@@ -114,7 +113,6 @@ JSON STRUCTURE FOR PURCHASING SERVICE:(Chris){
       }
    ]
 }
-
 
 
 
