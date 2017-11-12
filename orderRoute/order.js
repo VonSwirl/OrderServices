@@ -33,6 +33,8 @@ rOut.post('/makeOrder', function (req, res, next) {
             res.send('Order Already Exists\n' + 'orderRef: ' + unique);
             newOrder = null;
         } else {
+            //If there is no existing order with reference matching then 
+            //the order is created
             Order.create(req.body).then(function (order) {
                 newOrder = order;
                 res.send('Order Created\n' + 'orderRef: ' + unique);
@@ -63,32 +65,28 @@ rOut.get('/orderList/:custoRef', function (req, res, next) {
  * Recieves Order Complete from processing service, orderStatus updated in db.
  */
 rOut.put('/PurchasingUpdate/:orderRef', function (req, res, next) {
+    //This queries the document for sub-documents with a making EAN.
+    //The array int position is used to change values i the sub doc.
     Order.findOne({
         orderRef: req.params.orderRef,
         products: { $elemMatch: { ean: req.body.ean } }
     },
         {
+            //This product is now ready for processing.
             $set: { "products.$.nowAvailable": true, },
-            $set: { "products.$.stockQty": 999999 }
+            
+            //This just reflex that the stock level is available 
+            //it does not represent actual stock this value is no longer used.
+            $set: { "products.$.stockQty": 999999999 }
         }
-    ).then(function (order, $) {
-        order.products[$].stockQty = order.products[$].qtyReq;
-        console.log(order.products[$].stockQty);
-
-        // console.log(order.products[0].toObject().ean)
+    ).then(function (order) {
+        //This saves the new info.
         order.save();
-
-        Order.findOne({
-            orderRef: req.params.orderRef
-        }
-        ).then(function (order) {
-            // console.log(order);
-            res.send('Products Stock Level Updated');
-        });
+        //This responds with a string confirmation.
     }).catch(next);
 });
 
-//This post request hands the processing service an Order which needs to be completed
+//This post request hands the processing service an Order which needs to be completed.
 rOut.post('/completeOrder/:id', function (req, res, next) {
     res.send({ type: 'POST' });
 });
