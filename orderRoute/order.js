@@ -2,6 +2,10 @@
 const express = require('express');
 const rOut = express.Router();
 
+//Retrieves values from JSON objects for data binding. 
+//Offers params, nested queries, deep queries, custom reduce/filter functions and simple boolean logic.
+var jsonQuery = require('json-query')
+
 //Allows access to our order Data Model
 const Order = require('../domainModels/orderModel');
 
@@ -13,18 +17,17 @@ const moment = require('moment');
  * create a new order
  */
 rOut.post('/makeOrder', function (req, res, next) {
-
     //This variable creates 1 part of the unique Order Reference required my the orderModel
     var partTwo = moment().format('DDMMYYhm');
-
+    //function level order access.
+    var newOrder;
+    //Adds date to the order
+    req.body.orderDate = moment().format('llll');
     //This variable creates the 2nd part of unique ref
     var partOne = (req.body.custoRef);
     var unique = partOne + partTwo;
     req.body.orderRef = unique;
     var oRef = req.body.orderRef;
-    var newOrder;
-    //Adds date to the order
-    req.body.orderDate = moment().format('llll');
 
     //Checks if there is already an order making this reference number.
     Order.count({ orderRef: oRef }, function (err, count) {
@@ -32,11 +35,26 @@ rOut.post('/makeOrder', function (req, res, next) {
             res.send('Order Already Exists\n' + 'orderRef: ' + unique);
             newOrder = null;
         } else {
+            var queryOrder = req.body.products;
+
+            queryOrder.forEach(function (element) {
+
+                var qRequired = element.qtyReq;
+                var sQuantity = element.stockQty;
+
+                //This compares the stock vs the order requirement and sets
+                //boolean available if the products are in stock. 
+                if (sQuantity >= qRequired, element) {
+                    element.nowAvailable = true;
+                }
+            }, this);
+
             //If there is no existing order with reference matching then 
             //the order is created
             Order.create(req.body).then(function (order) {
-                newOrder = order;
-                res.send('Order Created\n' + 'orderRef: ' + unique);
+                console.log(queryOrder);
+                res.send('Order Created\n' + 'orderRef: \n\n\n\n' + queryOrder);
+
             }).catch(next);
         }
     });

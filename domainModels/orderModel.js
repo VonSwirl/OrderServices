@@ -8,19 +8,21 @@ const productSchema = new Schema({
     description: { type: String },
     productPrice: { type: Number },
     qtyReq: { type: Number },
-    stockQty: { type: Number },
     nowAvailable: { type: Boolean, default: false }
 });
 
 //Create order domain model and schema
 const orderSchema = new Schema({
+    //will need 
+    //custoaddress
+    //
     orderRef: { type: String },
     orderDate: { type: Date },
     products: [productSchema],
     stocked: { type: Boolean },
     orderStatus: { type: String },
     custoRef: { type: String },
-    custoAuth: { type: Boolean, required: (true, 'orderRef Attribute Required') },
+    custoAuth: { type: Boolean, required: (false, 'orderRef Attribute Required') },
     orderTotal: { type: Number }
 });
 
