@@ -23,7 +23,6 @@ rOut.post('/makeOrder', function (req, res, next) {
     req.body.orderRef = unique;
     var oRef = req.body.orderRef;
     var newOrder;
-
     //Adds date to the order
     req.body.orderDate = moment().format('llll');
 
@@ -52,7 +51,7 @@ rOut.post('/makeOrder', function (req, res, next) {
             {
                 $set: { "products.$.nowAvailable": true }
             }
-        )
+        ).catch(next);
     }
 });
 
@@ -74,7 +73,7 @@ rOut.put('/PurchasingUpdate/:orderRef', function (req, res, next) {
         {
             //This product is now ready for processing.
             $set: { "products.$.nowAvailable": true, },
-            
+
             //This just reflex that the stock level is available 
             //it does not represent actual stock this value is no longer used.
             $set: { "products.$.stockQty": 999999999 }
