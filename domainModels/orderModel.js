@@ -13,14 +13,12 @@ const productSchema = new Schema({
 
 //Create order domain model and schema
 const orderSchema = new Schema({
-    //will need 
-    //custoaddress
-    //
     orderRef: { type: String },
     orderDate: { type: Date },
     products: [productSchema],
     stocked: { type: Boolean },
     orderStatus: { type: String },
+    custoAddress: { type: String },
     custoRef: { type: String },
     custoAuth: { type: Boolean, required: (false, 'orderRef Attribute Required') },
     orderTotal: { type: Number }
