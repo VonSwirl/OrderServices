@@ -7,7 +7,7 @@ const mong = require('mongoose');
 const expressApp = express();
 
 //Connection to Mongodb via mongoose
-mong.connect('mongodb://localhost/orders');
+mong.connect('mongodb://localhost/orders', { useMongoClient: true, });
 
 //This overrides the depricated mongoose Promise with node.js Promise
 mong.Promise = global.Promise;

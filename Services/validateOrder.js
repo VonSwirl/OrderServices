@@ -1,105 +1,85 @@
 //Allows Parsing, validating, manipulation, and to display dates and times in JS.
 const moment = require('moment');
+const Order = require('../domainModels/orderModel');
 
-//rOut.post('/makeOrder', function (req, res, next) 
+function isOrderUnique(orderData) {
+    return new Promise(function (resolve, reject) {
+        //This variable creates the 2nd part of the unique Order Reference required my the orderModel
+        var partTwo = moment().format('DDMMYYhm');
+        //This variable creates the 1st part of unique ref
+        var partOne = (orderData.body.custoRef);
+        var unique = partOne + partTwo;
 
-function isOrderUnique(newOrderRequest){
-
-}
-
-function readyItemForStockUpdate(ean, number){
-    return new Promise(function(resolve, reject){
-        if(isNaN(number) || number <= 0){
-            reject('incorrect incoming');
-        }
-    Product.findOne({Ean : ean}).then(function(item){
-        
-        
-        var productDTO = new ProductDTO(item, number);
-        resolve(productDTO.jsonVersion);
-
-    }).catch(function(err){
-        reject('no such item found');
+        //Checks if there is already an order making this reference number.
+        Order.count({ orderRef: unique }, function (err, count) {
+            if (count > 0) {
+                resolve('Order Already Exists\n' + 'orderRef: ' + unique);
+            } else {
+                orderData.body.orderDate = moment().format('llll');
+                orderData.body.orderRef = unique;
+                resolve();
+                checkOrdersProductsStocked(orderData);
+            }
+        }).catch(function (errMessage) {
+            reject(errMessage);
+        })
     })
-});
 }
-/* 
-    //This variable creates 1 part of the unique Order Reference required my the orderModel
-    var partTwo = moment().format('DDMMYYhm');
-    //Adds date to the order
-    req.body.orderDate = moment().format('llll');
-    //This variable creates the 2nd part of unique ref
-    var partOne = (req.body.custoRef);
-    var unique = partOne + partTwo;
-    req.body.orderRef = unique;
-    var oRef = req.body.orderRef;
-    var missingStock = { orderid: unique, itemsRequired: [] };
-    var sendResponse;
-    var totalValue = 0.0;
 
-    //Checks if there is already an order making this reference number.
-    Order.count({ orderRef: oRef }, function (err, count) {
-        if (count > 0) {
-            res.send('Order Already Exists\n' + 'orderRef: ' + unique);
+function checkOrdersProductsStocked(orderData, forwardToProcessing) {
+    return new Promise(function (resolve, reject) {
+        var missingStock = { orderid: orderData.body.orderRef, itemsRequired: [] };
+        var sendResponse;
+        var totalValue = 0.0;
+        var queryOrder = orderData.body.products;
 
-        } else {
-            var queryOrder = req.body.products;
-            queryOrder.forEach(function (element) {
-                var qReq = parseInt(element.qtyReq);
-                var value = (element.productPrice * qReq);
-                totalValue = (totalValue + value);
+        queryOrder.forEach(function (element) {
+            var qReq = parseInt(element.qtyReq);
+            var value = (element.productPrice * qReq);
+            totalValue = (totalValue + value);
+            orderData.body.orderTotal = totalValue;
+            var sQty = parseInt(element.stockQty);
 
-                console.log('Total price = £' + totalValue);
-                var sQty = parseInt(element.stockQty);
-
-                //This compares the stock vs the order requirement and sets
-                //boolean available if the products are in stock. 
-                if (qReq <= sQty) {
-                    element.nowAvailable = true;
-                    console.log('1----------------------------');
-                    console.log('REQ = ' + qReq);
-                    console.log('INS = ' + sQty);
-                    console.log('AVAILABLE = TRUE');
-                    console.log(missingStock);
-
-                } else {
-                    var orderMoreStock = (qReq - sQty);
-                    console.log('2----------------------------');
-                    console.log('REQ = ' + qReq);
-                    console.log('IN = ' + sQty);
-                    console.log('AVAILABLE = FALSE');
-                    console.log('RE-ORDER VALUE = ' + orderMoreStock);
-
-                    element.nowAvailable = false;
-                    var ofEAN = element.ean;
-                    var orderMoreStock = (qReq - sQty);
-                    missingStock.itemsRequired.push({ "ean": ofEAN, "number": orderMoreStock });
-
-                    console.log('\nADDING TO MISSING LIST:');
-                    console.log(missingStock);
-                    console.log('NEXT ELEMENT');
-
-                }
-            }, this);
-
-            if (missingStock.length == 0) {
-                stocked = true;
-                //now send this to processing for completion
-                console.log('RESULT OF ORDER == STOCK AVAIABLE');
-                sendResponse = ('Order Stocked. Forwarding to processing service\n' + 'orderRef: ' + unique);
+            //This compares the stock vs the order requirement and sets
+            //boolean available if the products are in stock. 
+            if (qReq <= sQty) {
+                element.nowAvailable = true;
 
             } else {
-                //send this to purchasing
-                console.log('RESULT OF ORDER == STOCK MISSING ');
-                sendResponse = ('Stock for this order is unavailabe. Forwarding order to purchasing service \n' + missingStock);
-                //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!NOW   pass missing stock to chris!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1 
+                var orderMoreStock = (qReq - sQty);
+                element.nowAvailable = false;
+                var ofEAN = element.ean;
+                var orderMoreStock = (qReq - sQty);
+                missingStock.itemsRequired.push({ "ean": ofEAN, "number": orderMoreStock });
             }
+        }, this);
 
-            //If there is no existing order with reference matching then 
-            //the order is created
-            Order.create(req.body).then(function (order) {
-                res.send(sendResponse);
-                console.log('Saving Order to db');
-            }).catch(next);
+        if (missingStock.itemsRequired.length == []) {
+            orderData.body.stocked = true;
+            forwardToProcessing = true;
+            console.log(missingStock);
+            //now send this to processing for completion
+            sendResponse = ('Order Stocked. Forwarding to processing service.' 
+            + 'orderRef = ' + orderData.body.orderRef);
+
+        } else {
+            //send this to purchasing service
+            orderData.body.stocked = false;
+            forwardToProcessing = false;
+            console.log(missingStock);
+            sendResponse = ('Stock for this order is unavailabe. Forwarding order to purchasing service.'
+            + 'orderRef = ' + orderData.body.orderRef);
         }
-    }); */
+
+        //If there is no existing order with reference matching then 
+        //the order is created
+        Order.create(orderData.body).then(function (order) {
+            resolve(order);
+            console.log('Saving Order to db');
+        }).catch(function (errMessage) {
+            reject(errMessage);
+        })
+    })
+}
+
+module.exports = { isOrderUnique, checkOrdersProductsStocked };
