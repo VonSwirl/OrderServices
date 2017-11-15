@@ -14,7 +14,7 @@ JAVA DOC COMMENTING STRUCTURE:{
 
 CONSOLE COMMANDS:{
 CMD:
-cd orderServ*
+cd orderservic*
 ----------------------------------
 NODEMON:
 nodemon orderServiceController.js
