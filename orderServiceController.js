@@ -7,13 +7,13 @@ const mong = require('mongoose');
 const expressApp = express();
 
 //Connection to Mongodb via mongoose
-mong.connect('mongodb://localhost/orders');
+mong.connect('mongodb://localhost/orders', { useMongoClient: true, });
 
 //This overrides the depricated mongoose Promise with node.js Promise
 mong.Promise = global.Promise;
 
 //Allows Express to use body-parser tool to handle our JSON data.
-expressApp.use(bodPars.json());
+expressApp.use(bodPars.json());//
 
 //Allows Express access to order.js for HTTP verb functions. 
 expressApp.use('/order', require('./orderRoute/order'));
