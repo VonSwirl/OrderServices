@@ -1,8 +1,8 @@
-Here is work that didnt work. It was hard work! but alas it didnt work
+Here is work that didnt work. It was hard work! but alas it didnt work.
 
 
 
-    /*  Order.findOne({orderRef: req.params.orderRef})
+     Order.findOne({orderRef: req.params.orderRef})
      .then(function (order) {
          Order.findOne({
              products: { $elemMatch: { ean: req.body.ean } },
@@ -13,9 +13,9 @@ Here is work that didnt work. It was hard work! but alas it didnt work
              res.send('Products Stock Level Updated');
  
          }).catch(next);
-     }); */
+     }); 
 
-    /*     Order.findOneAndUpdate({
+     Order.findOneAndUpdate({
                 orderRef: req.params.orderRef,
                 products: { $elemMatch: { ean: req.body.ean } }
             },
@@ -33,4 +33,18 @@ Here is work that didnt work. It was hard work! but alas it didnt work
                     console.log(order);
                     res.send('Products Stock Level Updated');
                 });
-            }).catch(next); */
+            }).catch(next); 
+
+    //The data product stocked is only quiered if the correct details are in place.
+    if (newOrder != null) {
+        //Checks to see if any products need stock re-ordering to complete the Order.
+        Order.findOneAndUpdate(
+            {
+                orderRef: order.orderRef,
+                products: { $elemMatch: { ean: req.body.ean } }
+            },
+            {
+                $set: { "products.$.nowAvailable": true }
+            }
+        ).catch(next);
+    }

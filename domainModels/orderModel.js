@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 //Creates a separate schema that allows the products to be stored as an array of object
 const productSchema = new Schema({
-    ean: { type: Number },
+    ean: { type: String },
     name: { type: String },
     description: { type: String },
     productPrice: { type: Number },
