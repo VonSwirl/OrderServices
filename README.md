@@ -28,31 +28,6 @@ MONGODB:
 
 
 COMPLETE JSON ORDER STRUCTURE:{  
-	"products":[
-      {  
-         "ean":"111111",
-         "name":"AAA",
-         "description":"AAAAAA",
-         "productPrice":"1.00",
-         "qtyReq":"10",
-         "stockQty":"9",
-		 
-      },
-      {  
-         "ean":"222222",
-         "name":"BBB",
-         "description":"BBBBBB",
-         "productPrice":"2.00",
-         "qtyReq":"10",
-         "stockQty":"20"
-      }
-   ],
-   "stocked": "true",
-   "orderStatus":"Delivered",
-   "custoRef":"LLLLLLLLLLLLLLLLLLLLLLLL",
-   "custoAuth":"true",
-   "orderTotal":"0.00"
-}
 
 
 REQUIRED JSON FROM STOCK SERVICE{  

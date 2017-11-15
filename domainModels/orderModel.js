@@ -3,12 +3,11 @@ const Schema = mongoose.Schema;
 
 //Creates a separate schema that allows the products to be stored as an array of object
 const productSchema = new Schema({
-    ean: { type: Number },
+    ean: { type: String },
     name: { type: String },
     description: { type: String },
     productPrice: { type: Number },
     qtyReq: { type: Number },
-    stockQty: { type: Number },
     nowAvailable: { type: Boolean, default: false }
 });
 
@@ -19,8 +18,9 @@ const orderSchema = new Schema({
     products: [productSchema],
     stocked: { type: Boolean },
     orderStatus: { type: String },
+    custoAddress: { type: String },
     custoRef: { type: String },
-    custoAuth: { type: Boolean, required: (true, 'orderRef Attribute Required') },
+    custoAuth: { type: Boolean, required: (false, 'orderRef Attribute Required') },
     orderTotal: { type: Number }
 });
 
