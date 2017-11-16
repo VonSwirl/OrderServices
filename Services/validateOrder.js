@@ -3,11 +3,11 @@ const moment = require('moment');
 const Order = require('../domainModels/orderModel');
 
 /**
- * @param {JSON} orderData This is the res.body passed in by the post request /makeOrder.
- * @function isOrderUnique(orderData)
- * This function is called by orderRoute/order.js rOut.post/makeOrder.
+ * @description 
  * The purpose of this function is to establish if the post request orderRef 
  * matches an existing document in the order database.
+ * This function is called by order.js rOut.post('/makeOrder',function(req,res,next)
+ * @param {JSON} orderData This is the res.body passed in by the post request /makeOrder.
  */
 function isOrderUnique(orderData) {
     return new Promise(function (resolve, reject) {
@@ -25,7 +25,7 @@ function isOrderUnique(orderData) {
                 orderData.body.orderDate = moment().format('llll');
                 orderData.body.orderRef = unique;
                 resolve();
-                checkOrdersProductsStocked(orderData, false);
+                checkIfProductsStocked(orderData);
             }
         }).catch(function (errMessage) {
             reject(errMessage);
@@ -34,14 +34,13 @@ function isOrderUnique(orderData) {
 }
 
 /**
- * @param {JSON} orderData This is the res.body passed in by the isOrderUnique fn.
- * @param {Boolean} forwardToProcessing once true the order can be forwarded to processing service.
- * @function checkOrdersProductsStocked(orderData,forwardToProcessing) 
- * This function looks for any products which need to be ordered. If order forfilled then.
+ * @description This function looks for any products which need to be ordered. If order forfilled then.
  * Order is forwarded to invoicing service otherwise it is sent to purchasing service to forfill 
- * required stock.  
+ * required stock. 
+ * @function checkOrdersProductsStocked(orderData) 
+ * @param {JSON} orderData This is the res.body passed in by the isOrderUnique fn.
  */
-function checkOrdersProductsStocked(orderData, forwardToProcessing) {
+function checkIfProductsStocked(orderData) {
     return new Promise(function (resolve, reject) {
         var missingStock = { orderid: orderData.body.orderRef, itemsRequired: [] };
         var sendResponse;
@@ -68,33 +67,49 @@ function checkOrdersProductsStocked(orderData, forwardToProcessing) {
                 missingStock.itemsRequired.push({ "ean": ofEAN, "number": orderMoreStock });
             }
         }, this);
-
-        if (missingStock.itemsRequired.length == []) {
-            orderData.body.stocked = true;
-            forwardToProcessing = true;
-            console.log(missingStock);
-            //now send this to processing for completion
-            sendResponse = ('Order Stocked. Forwarding to processing service.'
-                + 'orderRef = ' + orderData.body.orderRef);
-
-        } else {
-            //send this to purchasing service
-            orderData.body.stocked = false;
-            forwardToProcessing = false;
-            console.log(missingStock);
-            sendResponse = ('Stock for this order is unavailabe. Forwarding order to purchasing service.'
-                + 'orderRef = ' + orderData.body.orderRef);
-        }
-
-        //If there is no existing order with reference matching then 
-        //the order is created
-        Order.create(orderData.body).then(function (order) {
-            resolve(order);
-            console.log('Saving Order to db');
-        }).catch(function (errMessage) {
-            reject(errMessage);
-        })
+        orderForwarding(orderData, missingStock);
     })
 }
 
-module.exports = { isOrderUnique, checkOrdersProductsStocked };
+/**
+ * @description
+ * This function is called by Fn checkIfProductsStocked().
+ * The purpose of this function is to query the missingStock array to determine if it is ready
+ * for the invoicing service to complete the order or whether it requires more products. If the 
+ * latter is true then then order is pass to the purchasing service. 
+ * @function orderForwarding(oD,mS)
+ * @param {JSON} oD aka(orderData) This is the modified res.body passed in by Fn checkIfProductsStocked
+ * @param {Array} mS aka(MissingStock) Is a list of all product Ean numbers and quantity missing from the order.
+ */
+function orderForwarding(oD, mS) {
+    if (mS.itemsRequired.length == []) {
+        oD.body.stocked = true;
+        saveNewOrderToMongo(oD);
+        console.log(mS);
+        //now send this to processing for completion
+        sendResponse = ('Order Stocked. Forwarding to processing service.'
+            + 'orderRef = ' + oD.body.orderRef);
+
+    } else {
+        //send this to purchasing service
+        oD.body.stocked = false;
+        saveNewOrderToMongo(oD);
+        console.log(mS);
+        sendResponse = ('Stock for this order is unavailabe. Forwarding order to purchasing service.'
+            + 'orderRef = ' + oD.body.orderRef);
+    }
+}
+
+function saveNewOrderToMongo(orderData) {
+    //If there is no existing order with reference matching then 
+    //the order is created
+    Order.create(orderData.body).then(function (order) {
+        resolve(order);
+        console.log('Saving Order to db');
+    }).catch(function (errMessage) {
+        reject(errMessage);
+    })
+
+}
+
+module.exports = { isOrderUnique, checkIfProductsStocked };
