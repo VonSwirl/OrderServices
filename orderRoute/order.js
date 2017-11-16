@@ -13,17 +13,14 @@ const Order = require('../domainModels/orderModel');
 //Allows Parsing, validating, manipulation, and to display dates and times in JS.
 const moment = require('moment');
 
-
 rOut.post('/makeOrder', function (req, res, next) {
     validateOrder.isOrderUnique(req);
 });
-
 
 //Accesses the db to allow the user or staff to view the customers order history.
 rOut.get('/orderList/:custoRef', function (req, res, next) {
     res.send({ type: 'GET' });
 });
-
 
 rOut.post('/PurchasingUpdate/:orderRef', function (req, res, next) {
     //This queries the document for sub-documents with a making EAN.
