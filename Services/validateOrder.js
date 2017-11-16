@@ -43,7 +43,6 @@ function isOrderUnique(orderData) {
 function checkIfProductsStocked(orderData) {
     return new Promise(function (resolve, reject) {
         var missingStock = { orderid: orderData.body.orderRef, itemsRequired: [] };
-        var sendResponse;
         var totalValue = 0.0;
         var queryOrder = orderData.body.products;
 
@@ -63,11 +62,13 @@ function checkIfProductsStocked(orderData) {
                 var orderMoreStock = (qReq - sQty);
                 element.nowAvailable = false;
                 var ofEAN = element.ean;
-                var orderMoreStock = (qReq - sQty);
                 missingStock.itemsRequired.push({ "ean": ofEAN, "number": orderMoreStock });
             }
-        }, this);
+        }, this).catch(function (errMessage) {
+            reject(errMessage);
+        });
         orderForwarding(orderData, missingStock);
+        resolve();
     })
 }
 
@@ -101,15 +102,16 @@ function orderForwarding(oD, mS) {
 }
 
 function saveNewOrderToMongo(orderData) {
-    //If there is no existing order with reference matching then 
-    //the order is created
-    Order.create(orderData.body).then(function (order) {
-        resolve(order);
-        console.log('Saving Order to db');
-    }).catch(function (errMessage) {
-        reject(errMessage);
+    return new Promise(function (resolve, reject) {
+        //If there is no existing order with reference matching then 
+        //the order is created
+        Order.create(orderData.body).then(function (order) {
+            resolve(order);
+            console.log('Saving Order to db');
+        }).catch(function (errMessage) {
+            reject(errMessage);
+        })
     })
-
 }
 
 module.exports = { isOrderUnique, checkIfProductsStocked };
