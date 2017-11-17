@@ -14,7 +14,11 @@ const Order = require('../domainModels/orderModel');
 const moment = require('moment');
 
 rOut.post('/makeOrder', function (req, res, next) {
-    validateOrder.isOrderUnique(req);
+
+    validateOrder.isOrderUnique(req, res, next).then(function (thingY) {
+        console.log("1#Success!\n" + thingY);
+
+    });
 });
 
 //Accesses the db to allow the user or staff to view the customers order history.
