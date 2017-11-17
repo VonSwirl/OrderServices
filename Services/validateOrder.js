@@ -9,46 +9,48 @@ const Order = require('../domainModels/orderModel');
  * This function is called by order.js rOut.post('/makeOrder',function(req,res,next)
  * @param {JSON} orderData This is the res.body passed in by the post request /makeOrder.
  */
-function isOrderUnique(orderData, responseToReq) {
+function isOrderUnique(orderData) {
     return new Promise(function (resolve, reject) {
-        //This variable creates the 2nd part of the unique Order Reference required my the orderModel
-        var partTwo = moment().format('DDMMYYhm');
-        //This variable creates the 1st part of unique ref
-        var partOne = (orderData.body.custoRef);
-        var unique = partOne + partTwo;
+        if (orderData.body.custoRef != null) {
+            //This variable creates the 2nd part of the unique Order Reference required my the orderModel
+            var partTwo = moment().format('DDMMYYhm');
+            //This variable creates the 1st part of unique ref
+            var partOne = (orderData.body.custoRef);
+            var unique = partOne + partTwo;
 
-        //Checks if there is already an order making this reference number.
-        Order.count({ orderRef: unique }, function (err, count) {
-            if (count > 0) {
-                //console.log('Order Already Exists\n' + 'orderRef: ' + unique);
-                resolve('Order Already Exists\n' + 'orderRef: ' + unique);
-            } else {
-                orderData.body.orderDate = moment().format('llll');
-                orderData.body.orderRef = unique;
+            //Checks if there is already an order making this reference number.
+            Order.count({ orderRef: unique }, function (err, count) {
 
-                checkIfProductsStocked(orderData).then(function (ord, missingS) {
-                    console.log("2#This is Unique");
-                    resolve(ord,missingS);
+                if (count > 0) {
+                    //console.log('Order Already Exists\n' + 'orderRef: ' + unique);
+                    resolve('Failed! Reason = Order Already Exists');
 
-                }).catch(function (errMessage) {
-                    reject(errMessage);
-                })
-            }
-        }).catch(function (errMessage) {
-            reject(errMessage);
-        })
+                } else {
+                    orderData.body.orderDate = moment().format('llll');
+                    orderData.body.orderRef = unique;
+                    resolve('Order Request Accepted');
+                    checkIfProductsStocked(orderData);
+
+                }
+            }).catch(function (errMessage) {
+                reject('error during Order.count orderRef');
+
+            })
+        } else {
+            resolve('No Customer Reference provided');
+
+        }
     })
 }
 
 /**
- * @description This function looks for any products which need to be ordered. If order forfilled then.
- * Order is forwarded to invoicing service otherwise it is sent to purchasing service to forfill 
- * required stock. 
+ * @description This function looks for any products which need to be ordered. If order forfilled then
+ * Order is forwarded to invoicing service otherwise it is sent to purchasing service to forfill required stock. 
  * @function checkOrdersProductsStocked(orderData) 
  * @param {JSON} orderData This is the res.body passed in by the isOrderUnique fn.
  */
 function checkIfProductsStocked(orderData) {
-    return new Promise(function (resolve, reject) {
+    try {
         var missingStock = { orderid: orderData.body.orderRef, itemsRequired: [] };
         var totalValue = 0.0;
         var queryOrder = orderData.body.products;
@@ -73,17 +75,11 @@ function checkIfProductsStocked(orderData) {
             }
         }, this);
 
-        orderForwarding(orderData, missingStock).then(function () {
-            console.log("3#Success!");
-            resolve(orderData, missingStock);
+        orderForwarding(orderData, missingStock);
 
-        }).catch(function (errMessage) {
-            reject(errMessage);
-        })
-
-    }).catch(function (errMessage) {
-        reject(errMessage);
-    })
+    } catch (error) {
+        console.log('error @ checkIfProduct fn');
+    }
 }
 
 /**
@@ -97,52 +93,35 @@ function checkIfProductsStocked(orderData) {
  * @param {Array} mS aka(MissingStock) Is a list of all product Ean numbers and quantity missing from the order.
  */
 function orderForwarding(oD, mS) {
-    return new Promise(function (resolve, reject) {
-        if (mS.itemsRequired.length == []) {
-            //now send this to processing for completion
-            sendResponse = ('Order Stocked. Forwarding to processing service.'
-                + 'orderRef = ' + oD.body.orderRef);
+    if (mS.itemsRequired.length == []) {
+        oD.body.stocked = true;
+        saveNewOrderToMongo(oD);
+        //now send this to processing for completion
 
-            oD.body.stocked = true;
-            saveNewOrderToMongo(oD).then(function (oD) {
-                console.log("4#SuccessSTOCKED!", sendResponse, oD);
-                resolve(oD);
-
-            }).catch(function (errMessage) {
-                reject(errMessage);
-            })
-
-        } else {
-            //send this to purchasing service
-            sendResponse = ('Stock for this order is unavailabe. Forwarding order to purchasing service.'
-                + 'orderRef = ' + oD.body.orderRef);
-
-            oD.body.stocked = false;
-            saveNewOrderToMongo(oD).then(function () {
-                console.log("5#SuccessNOTSTOCKED!");
-                resolve(oD);
-
-            }).catch(function (errMessage) {
-                reject(errMessage);
-            })
-        }
-    }).catch(function (errMessage) {
-        reject(errMessage);
-    })
+    } else {
+        oD.body.stocked = false;
+        saveNewOrderToMongo(oD);
+        //send this to purchasing service
+    }
 }
 
-function saveNewOrderToMongo(orderData) {
-    return new Promise(function (resolve, reject) {
+/**
+ * @description
+ * The purpose of this function is to save a prevalidated order to the Mongo Database 
+ * @function orderForwarding(orderD)
+ * @param {JSON} orderD aka(orderData) This is the modified res.body passed in by Fn orderForwarding.
+ */
+function saveNewOrderToMongo(orderD) {
+    try {
         //If there is no existing order with reference matching then 
         //the order is created
-        Order.create(orderData.body).then(function (order) {
-            console.log('6#Saving Order to db');
-            resolve(order);
+        Order.create(orderD.body);
+        console.log('New Order saved to db', orderD.body);
 
-        }).catch(function (errMessage) {
-            reject(errMessage);
-        })
-    })
+    } catch (error) {
+        console.log('error @ savingOrder');
+
+    }
 }
 
 module.exports = { isOrderUnique, checkIfProductsStocked };

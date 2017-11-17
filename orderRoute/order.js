@@ -1,3 +1,5 @@
+
+
 //Constraints below are dependencies required by this routing file.
 const express = require('express');
 const rOut = express.Router();
@@ -14,11 +16,11 @@ const Order = require('../domainModels/orderModel');
 const moment = require('moment');
 
 rOut.post('/makeOrder', function (req, res, next) {
+    validateOrder.isOrderUnique(req).then(function (messageResponse) {
+        //console.log(messageResponse);
+        res.send(messageResponse);
 
-    validateOrder.isOrderUnique(req, res, next).then(function (thingY) {
-        console.log("1#Success!\n" + thingY);
-
-    });
+    }).catch(next);
 });
 
 //Accesses the db to allow the user or staff to view the customers order history.
