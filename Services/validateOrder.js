@@ -100,8 +100,10 @@ function orderForwarding(oD, mS) {
 
     } else {
         oD.body.stocked = false;
+        console.log('---------------------\n' ,mS,'\n-------------------');
         saveNewOrderToMongo(oD);
         //send this to purchasing service
+
     }
 }
 
