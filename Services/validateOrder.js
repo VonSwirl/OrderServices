@@ -9,7 +9,7 @@ const Order = require('../domainModels/orderModel');
  * This function is called by order.js rOut.post('/makeOrder',function(req,res,next)
  * @param {JSON} orderData This is the res.body passed in by the post request /makeOrder.
  */
-function isOrderUnique(orderData) {
+function isOrderUnique(orderData, responseToReq) {
     return new Promise(function (resolve, reject) {
         //This variable creates the 2nd part of the unique Order Reference required my the orderModel
         var partTwo = moment().format('DDMMYYhm');
@@ -20,12 +20,19 @@ function isOrderUnique(orderData) {
         //Checks if there is already an order making this reference number.
         Order.count({ orderRef: unique }, function (err, count) {
             if (count > 0) {
+                //console.log('Order Already Exists\n' + 'orderRef: ' + unique);
                 resolve('Order Already Exists\n' + 'orderRef: ' + unique);
             } else {
                 orderData.body.orderDate = moment().format('llll');
                 orderData.body.orderRef = unique;
-                resolve();
-                checkIfProductsStocked(orderData);
+
+                checkIfProductsStocked(orderData).then(function (ord, missingS) {
+                    console.log("2#This is Unique");
+                    resolve(ord,missingS);
+
+                }).catch(function (errMessage) {
+                    reject(errMessage);
+                })
             }
         }).catch(function (errMessage) {
             reject(errMessage);
@@ -64,11 +71,18 @@ function checkIfProductsStocked(orderData) {
                 var ofEAN = element.ean;
                 missingStock.itemsRequired.push({ "ean": ofEAN, "number": orderMoreStock });
             }
-        }, this).catch(function (errMessage) {
+        }, this);
+
+        orderForwarding(orderData, missingStock).then(function () {
+            console.log("3#Success!");
+            resolve(orderData, missingStock);
+
+        }).catch(function (errMessage) {
             reject(errMessage);
-        });
-        orderForwarding(orderData, missingStock);
-        resolve();
+        })
+
+    }).catch(function (errMessage) {
+        reject(errMessage);
     })
 }
 
@@ -83,22 +97,38 @@ function checkIfProductsStocked(orderData) {
  * @param {Array} mS aka(MissingStock) Is a list of all product Ean numbers and quantity missing from the order.
  */
 function orderForwarding(oD, mS) {
-    if (mS.itemsRequired.length == []) {
-        oD.body.stocked = true;
-        saveNewOrderToMongo(oD);
-        console.log(mS);
-        //now send this to processing for completion
-        sendResponse = ('Order Stocked. Forwarding to processing service.'
-            + 'orderRef = ' + oD.body.orderRef);
+    return new Promise(function (resolve, reject) {
+        if (mS.itemsRequired.length == []) {
+            //now send this to processing for completion
+            sendResponse = ('Order Stocked. Forwarding to processing service.'
+                + 'orderRef = ' + oD.body.orderRef);
 
-    } else {
-        //send this to purchasing service
-        oD.body.stocked = false;
-        saveNewOrderToMongo(oD);
-        console.log(mS);
-        sendResponse = ('Stock for this order is unavailabe. Forwarding order to purchasing service.'
-            + 'orderRef = ' + oD.body.orderRef);
-    }
+            oD.body.stocked = true;
+            saveNewOrderToMongo(oD).then(function (oD) {
+                console.log("4#SuccessSTOCKED!", sendResponse, oD);
+                resolve(oD);
+
+            }).catch(function (errMessage) {
+                reject(errMessage);
+            })
+
+        } else {
+            //send this to purchasing service
+            sendResponse = ('Stock for this order is unavailabe. Forwarding order to purchasing service.'
+                + 'orderRef = ' + oD.body.orderRef);
+
+            oD.body.stocked = false;
+            saveNewOrderToMongo(oD).then(function () {
+                console.log("5#SuccessNOTSTOCKED!");
+                resolve(oD);
+
+            }).catch(function (errMessage) {
+                reject(errMessage);
+            })
+        }
+    }).catch(function (errMessage) {
+        reject(errMessage);
+    })
 }
 
 function saveNewOrderToMongo(orderData) {
@@ -106,8 +136,9 @@ function saveNewOrderToMongo(orderData) {
         //If there is no existing order with reference matching then 
         //the order is created
         Order.create(orderData.body).then(function (order) {
+            console.log('6#Saving Order to db');
             resolve(order);
-            console.log('Saving Order to db');
+
         }).catch(function (errMessage) {
             reject(errMessage);
         })
