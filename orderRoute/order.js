@@ -1,5 +1,3 @@
-
-
 //Constraints below are dependencies required by this routing file.
 const express = require('express');
 const rOut = express.Router();
@@ -28,34 +26,28 @@ rOut.get('/orderList/:custoRef', function (req, res, next) {
     res.send({ type: 'GET' });
 });
 
-rOut.post('/PurchasingUpdate/:orderRef', function (req, res, next) {
-    //This queries the document for sub-documents with a making EAN.
-    //The array int position is used to change values i the sub doc.
+/**
+ * @description
+ * This post recieves and update for a products availablity. It queries the document for 
+ * sub-documents with a matching EAN. If fount this sub doc value nowAvailable is set to true.
+ */
+rOut.put('/PurchasingUpdate/:orderRef', function (req, res, next) {
+    validateOrder.purchasingServUpdateHandler(req).then(function (messageResponse) {
+        res.send(messageResponse);
 
-    res.send(req.body);
-    Order.findOne({
-        orderRef: req.params.orderRef,
-        products: { $elemMatch: { ean: req.body.ean } }
-    },
-        {
-            //This product is now ready for processing.
-            $set: { "products.$.nowAvailable": true, },
-        }
-    ).then(function (order) {
-        //This saves the new info.
-        order.save();
-        //This responds with a string confirmation.
     }).catch(next);
-});
+})
 
 //This post request hands the processing service an Order which needs to be completed.
 rOut.post('/completeOrder/:id', function (req, res, next) {
     res.send({ type: 'POST' });
+
 });
 
 //Delete available for future use, not required at this stage.
 rOut.delete('', function (req, res, next) {
     res.send({ type: 'DELETE' });
+
 });
 
 module.exports = rOut;
