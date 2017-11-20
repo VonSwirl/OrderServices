@@ -2,6 +2,7 @@
 //Allows Parsing, validating, manipulation, and to display dates and times in JS.
 const moment = require('moment');
 const Order = require('../domainModels/orderModel');
+const forwardingService = require('./orderForwardingController.js');
 
 /**
  * @description 
@@ -80,7 +81,7 @@ function checkIfProductsStocked(orderData) {
         newOrderForwarding(orderData, missingStock);
 
     } catch (error) {
-        console.log('error @ checkIfProduct fn');
+        console.log('error @ checkIfProduct fn '+error);
     }
 }
 
@@ -105,7 +106,8 @@ function newOrderForwarding(oD, mS) {
         oD.body.stocked = false;
         oD.body.orderStatus = "Waiting for Stock";
         console.log('Missing Stock--------\n', mS, '\n');
-        saveNewOrderToMongo(oD);
+        saveNewOrderToMongo(oD);  
+        forwardingService.sendOrderToPurchasingService(mS);
         //send this to purchasing service
     }
 }
@@ -215,4 +217,8 @@ function purchasingServUpdateHandler(reqData) {
     })
 }
 
-module.exports = { isOrderUnique, isOrderReadyForInvoicingService, purchasingServUpdateHandler };
+module.exports = {
+    isOrderUnique,
+    isOrderReadyForInvoicingService,
+    purchasingServUpdateHandler
+};
