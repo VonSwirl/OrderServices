@@ -2,7 +2,7 @@
 //Allows Parsing, validating, manipulation, and to display dates and times in JS.
 const moment = require('moment');
 const Order = require('../domainModels/orderModel');
-const forwardingService = require('./orderForwardingController.js');
+const forwardingService = require('./orderForwardingService.js');
 
 /**
  * @description 
