@@ -32,27 +32,33 @@ COMPLETE JSON ORDER STRUCTURE:{
 
 
 REQUIRED JSON FROM STOCK SERVICE{  
-   "custoRef":"ABC123EFG",
-   "custoAuth":"true",
-   "products":[  
+  {
+	"products":[
       {  
-         "ean":"111111",
-         "name":"AAA",
-         "description":"AAAAAA",
+         "ean":"1A",
+         "name":"A",
+         "description":"A",
          "productPrice":"1.00",
-         "qtyReq":"10",
-         "stockQty":"9",
-         
+         "qtyReq":"1000",
+         "stockQty":"4",
+         "nowAvailable": ""
       },
       {  
-         "ean":"222222",
-         "name":"BBB",
-         "description":"BBBBBB",
-         "productPrice":"2.00",
-         "qtyReq":"10",
-         "stockQty":"20",
+         "ean":"3C",
+         "name":"C",
+         "description":"C",
+         "productPrice":"4.00",
+         "qtyReq":"250",
+         "stockQty":"1",
+         "nowAvailable": ""
       }
-   ]
+   ],
+   "stocked": "",
+   "orderStatus":"",
+   "custoRef":"allo1ut2t",
+   "custoAuth":"true",
+   "orderTotal":"0.00"
+}
 }
 
 
