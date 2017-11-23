@@ -15,6 +15,11 @@ function sendOrderToPurchasingService(missingOrder) {
     });
 }
 
+/**
+ * 
+ * @param {*} cID 
+ * @param {*} approved 
+ */
 function customerAuthUpdate(cID, approved) {
     return new Promise(function (resolve, reject) {
         Order.find({ custoRef: cID }).then(function (orderOrListOf) {
