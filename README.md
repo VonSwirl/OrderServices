@@ -11,7 +11,8 @@ JAVA DOC COMMENTING STRUCTURE:{
  
 }
 
-
+//Mlab connection string
+// mong.connect('mongodb://orderServiceUsr:osuser@ds042527.mlab.com:42527/orderservicedb', { useMongoClient: true });
 CONSOLE COMMANDS:{
 CMD:
 cd orderservic*
