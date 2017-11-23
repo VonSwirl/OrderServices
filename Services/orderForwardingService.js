@@ -10,7 +10,7 @@ function sendOrderToPurchasingService(missingOrder) {
 
     }, function (err, res, body) {
         console.log(err);
-        console.log(body, "i am here");
+        console.log(body, "Attempting to connect to purchasing service");
 
     });
 }
@@ -38,4 +38,4 @@ function customerAuthUpdate(cID, approved) {
     })
 }
 
-module.exports = sendOrderToPurchasingService, customerAuthUpdate;
+module.exports = {sendOrderToPurchasingService, customerAuthUpdate};
