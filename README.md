@@ -298,6 +298,13 @@ docker run -d \
 
 npm install -g docker
 
+C:\Users\DeepThought2\OrderServices (vonBranch -> origin) (orderservices@1.0.0)
+
+λ docker build -t orderservice-app .
+
+λ docker run -it --rm --name jay-orderservice-app  orderservice-app
+c
+
 	
 	
 	
