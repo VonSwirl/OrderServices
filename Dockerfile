@@ -6,7 +6,7 @@ WORKDIR /app
 COPY package.json /app
 COPY package-lock.json /app
 RUN npm install
-Copy . /app
+COPY . /app
 CMD node orderServiceController.js
 # replace this with your application's default port
 EXPOSE 3004

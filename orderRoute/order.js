@@ -23,8 +23,8 @@ rOut.post('/makeOrder', function (req, res, next) {
 });
 
 //Accesses the db to allow the user or staff to view the customers order history.
-rOut.get('/orderList/:custoRef', function (req, res, next) {
-    res.send({ type: 'GET' });
+rOut.get('/', function (req, res, next) {
+    res.send({ type: 'PING PONG PING PONG' });
 });
 
 /**
