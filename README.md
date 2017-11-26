@@ -25,6 +25,12 @@ docker stop <name||id>
 //removes container/delte
 docker rm <name||id>
 
+//stop everything 
+docker stop $(docker ps -a -q)
+
+docker container ls
+docker image ls
+
 
 NGINX REVERSE PROXY
 
