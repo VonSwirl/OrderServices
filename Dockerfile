@@ -1,7 +1,7 @@
 
 
 # specify the node base image with your desired version node:<version>
-FROM node:8.8.1
+FROM node:9.2.0
 WORKDIR /app
 COPY package.json /app
 COPY package-lock.json /app
