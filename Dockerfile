@@ -1,10 +1,9 @@
 
 
 # specify the node base image with your desired version node:<version>
-FROM node:9.2.0
+FROM node:8.9.1
 WORKDIR /app
 COPY package.json /app
-COPY package-lock.json /app
 RUN npm install
 COPY . /app
 CMD node orderServiceController.js
