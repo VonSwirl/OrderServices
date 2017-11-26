@@ -20,9 +20,10 @@
   "dependencies": {
     "body-parser": "^1.18.2",
     "express": "^4.16.2",
+    "json-query": "^2.2.2",
     "moment": "^2.19.2",
     "mongoose": "^4.12.6",
-    "request": "^2.83.0"
+    "request": "^2.83.0" 
   },
   "devDependencies": {
     "nodemon": "^1.12.1"
