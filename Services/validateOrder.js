@@ -185,7 +185,7 @@ function isOrderReadyForInvoicingService(orderInbound) {
 function purchasingServUpdateHandler(reqData) {
     return new Promise(function (resolve, reject) {
         var count = 0;
-        Order.findOne({ orderRef: reqData.params.orderRef }).then(function (order) {
+        Order.findOne({ orderRef: reqData.body.orderRef }).then(function (order) {
             if (order != null) {
                 order.products.forEach(function (element) {
                     if (element.ean == reqData.body.ean && count == 0) {
