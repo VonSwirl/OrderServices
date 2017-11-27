@@ -32,7 +32,7 @@ rOut.get('/', function (req, res, next) {
  * This post recieves and update for a products availablity. It queries the document for 
  * sub-documents with a matching EAN. If fount this sub doc value nowAvailable is set to true.
  */
-rOut.put('/PurchasingUpdate/:orderRef', function (req, res, next) {
+rOut.put('/PurchasingUpdate/', function (req, res, next) {
     validateOrder.purchasingServUpdateHandler(req).then(function (messageResponse) {
         res.send(messageResponse);
 

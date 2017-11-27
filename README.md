@@ -26,7 +26,8 @@ docker stop <name||id>
 docker rm <name||id>
 
 //stop everything 
-docker stop $(docker ps -a -q)
+sudo docker stop $(docker ps -a -q)
+sudo docker rm $(docker ps -a -q)
 
 docker container ls
 docker image ls
@@ -269,7 +270,49 @@ MONGODB:
 
 
 COMPLETE JSON ORDER STRUCTURE:{  
-
+{ products:
+   [ { ean: '1A',
+       name: 'A',
+       description: 'A',
+       productPrice: '1.00',
+       qtyReq: '1000',
+       stockQty: '4',
+       nowAvailable: false },
+     { ean: '2B',
+       name: 'B',
+       description: 'B',
+       productPrice: '2.00',
+       qtyReq: '500',
+       stockQty: '0',
+       nowAvailable: false },
+     { ean: '3C',
+       name: 'C',
+       description: 'C',
+       productPrice: '4.00',
+       qtyReq: '250',
+       stockQty: '1',
+       nowAvailable: false },
+     { ean: '4D',
+       name: 'D',
+       description: 'D',
+       productPrice: '10.00',
+       qtyReq: '100',
+       stockQty: '1',
+       nowAvailable: false },
+     { ean: '5E',
+       name: 'E',
+       description: 'E',
+       productPrice: '1.37',
+       qtyReq: '99',
+       stockQty: '9',
+       nowAvailable: false } ],
+  stocked: false,
+  orderStatus: 'Waiting for Stock',
+  custoRef: 'allo10ut2t',
+  custoAuth: 'true',
+  orderTotal: 4135.63,
+  orderDate: 'Sun, Nov 26, 2017 10:20 PM',
+  orderRef: 'allo10ut2t2611171020' }
 
 REQUIRED JSON FROM STOCK SERVICE{  
   {
