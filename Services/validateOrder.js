@@ -157,6 +157,7 @@ function isOrderReadyForInvoicingService(orderInbound) {
         console.log('Order Complete forward to invoicing');
         orderInbound.orderStatus = "Pending Invoice";
         orderInbound.stocked = true;
+        sendOrderToInvoicing(orderInbound);
 
     } else {
 

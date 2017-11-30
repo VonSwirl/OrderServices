@@ -16,7 +16,24 @@ function sendOrderToPurchasingService(missingOrder) {
 }
 
 /**
- * 
+ * @description This issues a post request to the invoicing service with a valid order.
+ * @param {JSON} order This sends a nicely validated order to invoicing service 
+ */
+function sendOrderToInvoicing(order) {
+    console.log(order);
+    req.post({
+        url: config.sendOrderToInvoicing,
+        body: order.json,
+        json: true
+
+    }, function (err, res, body) {
+        console.log(err);
+        console.log(body, "Attempting to connect to Invoicing service");
+
+    });
+}
+
+/**
  * @param {*} cID 
  * @param {*} approved 
  */
@@ -43,4 +60,8 @@ function customerAuthUpdate(cID, approved) {
     })
 }
 
-module.exports = {sendOrderToPurchasingService, customerAuthUpdate};
+module.exports = {
+    sendOrderToPurchasingService,
+    customerAuthUpdate,
+    sendOrderToInvoicing
+};
