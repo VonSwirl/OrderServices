@@ -34,7 +34,6 @@ function sendOrderToInvoicing(order) {
 }
 
 /**
- * 
  * @param {*} cID 
  * @param {*} approved 
  */
