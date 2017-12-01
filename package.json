@@ -19,6 +19,7 @@
   "homepage": "https://github.com/VonSwirl/OrderServices#readme",
   "dependencies": {
     "body-parser": "^1.18.2",
+    "eslint": "^4.12.1",
     "express": "^4.16.2",
     "json-query": "^2.2.2",
     "jsonwebtoken": "^7.2.0",
