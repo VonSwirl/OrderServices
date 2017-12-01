@@ -8,6 +8,7 @@ const mong = require('mongoose');
 const expressApp = express();
 
 
+
 /* expressApp.get('/protected', expressJwt({
         secret: 'hello world !', getToken: function fromHeaderOrQueryString(req) {
             if (req.headers.authorization && req.headers.authorization.split(' ')[0] === 'Bearer')
