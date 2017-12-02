@@ -6,6 +6,8 @@ config.orderServiceURLtoUpdateWithPurchase = "http://localhost:3001/purchasing/t
 //config.testDatabaseURL = "mongodb://localhost:27017/MyDb";
 config.sendOrderToInvoicingService = "http://localhost:3007/api/Invoice";
 config.stockServiceUpdaterURL = ":3001/purchasing/test";
-config.purchaseMissingStockURL = "http://localhost:3001/purchasing/stockRequired";
+
+config.purchaseMissingStockURL = "http://3amigosp.azurewebsites.net/purchasing/stockRequired";
+//config.purchaseMissingStockURL = "http://localhost:3001/purchasing/stockRequired";
 
 module.exports = config;
