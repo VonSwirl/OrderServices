@@ -2,10 +2,12 @@
 const bodPars = require('body-parser');
 const express = require('express');
 const mong = require('mongoose');
+var config = require('./config');
 //const expressJwt = require('jsonwebtoken');
 
 //Sets up an instance of Express.js .
 const expressApp = express();
+
 
 
 /* expressApp.get('/protected', expressJwt({
@@ -24,7 +26,7 @@ const expressApp = express();
 //Connection to my Local Mongodb via mongoose
 //mong.connect('mongodb://localhost/orders', { useMongoClient: true });
 //Connection to my Mlab connection string Mongodb via mongoose deployment server/
-mong.connect('mongodb://orderServiceUsr:osuser@ds042527.mlab.com:42527/orderservicedb', { useMongoClient: true });
+mong.connect(config.databaseURL, { useMongoClient: true });
 
 //This overrides the depricated mongoose Promise with node.js Promise
 mong.Promise = global.Promise;
