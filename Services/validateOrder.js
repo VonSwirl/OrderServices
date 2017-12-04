@@ -41,7 +41,6 @@ function isOrderUnique(orderData) {
             })
         } else {
             resolve('No Customer Reference provided');
-
         }
     })
 }
