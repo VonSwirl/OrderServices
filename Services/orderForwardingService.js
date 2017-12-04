@@ -1,18 +1,24 @@
+
 var config = require('../config');
 var req = require('request');
 
 function sendOrderToPurchasingService(missingOrder) {
     console.log(missingOrder);
-    req.post({
-        url: config.purchaseMissingStockURL,
-        body: missingOrder.json,
-        json: true
+    try {
+        req.post({
+            url: config.purchaseMissingStockURL,
+            body: missingOrder.json,
+            json: true
 
-    }, function (err, res, body) {
-        console.log(err);
-        console.log(body, "Attempting to connect to purchasing service");
-
-    });
+        }, function (err, res, body) {
+            if (err) {
+                console.log('There was an error', err);
+                //console.log(res);
+            }
+        })
+    } catch (err) {
+        console.log('error with letting order service know we have update', err);
+    }
 }
 
 /**
@@ -21,16 +27,21 @@ function sendOrderToPurchasingService(missingOrder) {
  */
 function sendOrderToInvoicing(order) {
     console.log(order);
-    req.post({
-        url: config.sendOrderToInvoicing,
-        body: order.json,
-        json: true
+    try {
+        req.post({
+            url: config.sendOrderToInvoicingURL,
+            body: order.json,
+            json: true
 
-    }, function (err, res, body) {
-        console.log(err);
-        console.log(body, "Attempting to connect to Invoicing service");
-
-    });
+        }, function (err, res, body) {
+            if (err) {
+                console.log('There was an error', err);
+                //console.log(res);
+            }
+        })
+    } catch (err) {
+        console.log('error with letting order service know we have update', err);
+    }
 }
 
 /**

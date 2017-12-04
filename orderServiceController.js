@@ -3,25 +3,10 @@ const bodPars = require('body-parser');
 const express = require('express');
 const mong = require('mongoose');
 var config = require('./config');
-//const expressJwt = require('jsonwebtoken');
+
 
 //Sets up an instance of Express.js .
 const expressApp = express();
-
-
-
-/* expressApp.get('/protected', expressJwt({
-        secret: 'hello world !', getToken: function fromHeaderOrQueryString(req) {
-            if (req.headers.authorization && req.headers.authorization.split(' ')[0] === 'Bearer')
-                return req.headers.authorization.split(' ')[1];
-
-            else if (req.query && req.query.token)
-                return req.query.token;
-            
-                return null;
-        }
-    })
-); */
 
 //Connection to my Local Mongodb via mongoose
 //mong.connect('mongodb://localhost/orders', { useMongoClient: true });
