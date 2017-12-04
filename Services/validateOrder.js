@@ -13,26 +13,25 @@ const forwardingService = require('./orderForwardingService.js');
  */
 function isOrderUnique(orderData) {
     return new Promise(function (resolve, reject) {
-        if (orderData.body.custoRef != null) {
+        var validRef = orderData.body.products[0].custoRef;
+
+        if (validRef != null) {
+            orderData.body.custoRef = validRef;
             //This variable creates the 2nd part of the unique Order Reference required my the orderModel
             var partTwo = moment().format('DDMMYYhm');
-            //This variable creates the 1st part of unique ref
-            var partOne = (orderData.body.custoRef);
-            var unique = partOne + partTwo;
+            var unique = validRef + partTwo;
 
-            //Checks if there is already an order making this reference number.
+            //Checks if there is already an order with this same reference number.
             Order.count({ orderRef: unique }, function (err, count) {
 
                 if (count > 0) {
-                    console.log('Duplicate Order Rejected');
                     resolve('Failed! Reason = Order Already Exists');
 
                 } else {
                     orderData.body.orderDate = moment().format('llll');
                     orderData.body.orderRef = unique;
-                    console.log('New Order Accepted');
-                    resolve('Order Request Accepted');
                     checkIfProductsStocked(orderData);
+                    resolve('Order Request Accepted');
 
                 }
             }).catch(function (err) {
@@ -100,6 +99,7 @@ function newOrderForwarding(oD, mS) {
         oD.body.orderStatus = "Pending Invoice";
         saveNewOrderToMongo(oD);
         //now send this to processing for completion
+        //TODO thiss
 
     } else {
         oD.body.stocked = false;
