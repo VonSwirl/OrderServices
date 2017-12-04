@@ -20,7 +20,7 @@ const orderSchema = new Schema({
     orderStatus: { type: String },
     custoAddress: { type: String },
     custoRef: { type: String, required: true },
-    custoAuth: { type: Boolean, required: (false, 'orderRef Attribute Required') },
+    custoAuth: { type: Boolean },
     orderTotal: { type: Number }
 });
 
