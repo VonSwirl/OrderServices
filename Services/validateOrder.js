@@ -96,10 +96,9 @@ function checkIfProductsStocked(orderData) {
 function newOrderForwarding(oD, mS) {
     if (mS.itemsRequired.length == []) {
         oD.body.stocked = true;
-        oD.body.orderStatus = "Pending Invoice";
+        oD.body.orderStatus = "Complete";
         saveNewOrderToMongo(oD);
-        //now send this to processing for completion
-        //TODO thiss
+        forwardingService.sendOrderToInvoicing(oD);
 
     } else {
         oD.body.stocked = false;
@@ -107,7 +106,6 @@ function newOrderForwarding(oD, mS) {
         console.log('Missing Stock--------\n', mS, '\n');
         saveNewOrderToMongo(oD);
         forwardingService.sendOrderToPurchasingService(mS);
-        //send this to purchasing service
     }
 }
 
