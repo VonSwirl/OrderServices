@@ -3,10 +3,14 @@ const bodPars = require('body-parser');
 const express = require('express');
 const mong = require('mongoose');
 var config = require('./config');
-
+const path = require('path');
 
 //Sets up an instance of Express.js .
 const expressApp = express();
+
+expressApp.set('views', path.join(__dirname, 'views'));
+expressApp.set('view engine', 'pug');
+
 
 //Connection to my Local Mongodb via mongoose
 //mong.connect('mongodb://localhost/orders', { useMongoClient: true });
