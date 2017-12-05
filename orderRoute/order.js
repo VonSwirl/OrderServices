@@ -23,11 +23,6 @@ rOut.post('/makeOrder', function (req, res, next) {
 });
 
 //Accesses the db to allow the user or staff to view the customers order history.
-rOut.get('/vieworders', function (req, res, next) {
-    res.render('viewOrder.pug', { 'products': req.body.products });
-});
-
-//Accesses the db to allow the user or staff to view the customers order history.
 rOut.get('/', function (req, res, next) {
     //res.send({ type: 'PING PONG PING PONG' });
     res.render('viewOrder.pug', { 'products': req.body.products });
