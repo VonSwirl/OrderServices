@@ -1,12 +1,20 @@
 doctype html 
 head 
-    title Order 
+    title Order Service 
 body 
     h1 Order complete 
     table
         thead 
-            tr "product name"
+            tr Order Ref
+            tr Order Status
+            tr Total order price
         tbody
-            each product in products
-                td= product.name
+            each order in orderList
+                tr
+                    td= order.orderRef
+                    td= order.orderStatus
+                    td= order.orderTotal
+                    td= order.products[0].ean
+
+
 
