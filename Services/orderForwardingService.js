@@ -7,7 +7,7 @@ function sendOrderToPurchasingService(missingOrder) {
     try {
         req.post({
             url: config.purchaseMissingStockURL,
-            body: missingOrder.json,
+            body: missingOrder,
             json: true
 
         }, function (err, res, body) {
@@ -17,7 +17,7 @@ function sendOrderToPurchasingService(missingOrder) {
             }
         })
     } catch (err) {
-        console.log('error with letting order service know we have update', err);
+        console.log('error connecting to purchasing service', err);
     }
 }
 
