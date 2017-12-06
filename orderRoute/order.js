@@ -48,11 +48,23 @@ rOut.put('/PurchasingUpdate/', function (req, res, next) {
 });
 
 /**
+ * This returns a view for the staff to see all of a customers orders 
+ */
+rOut.get('/displayorders', function (req, res, next) {
+    if(req.query.custoRef != null){
+
+    }else{
+
+    }
+    res.render('viewOrder.pug', { 'products': req.body.products });
+});
+
+/**
  * This put request receives a update from processing service. The request
  * should contain a customer reference number and also a boolean value.
  * The boolean value sets the customers purchase approvale to true or false
  */
-rOut.put('/CustomerApprovalUpdate/customer?approved=', function (req, res, next) {
+rOut.put('/CustomerApprovalUpdate', function (req, res, next) {
     forwardingService.customerAuthUpdate(req.param.id, req.query.approved)
         .then(function (messageResponse) {
             res.send(messageResponse);
