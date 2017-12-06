@@ -15,10 +15,12 @@ const Order = require('../domainModels/orderModel');
 const moment = require('moment');
 
 rOut.post('/makeOrder', function (req, res, next) {
-    validateOrder.isOrderUnique(req).then(function (messageResponse) {
-        //console.log(messageResponse);
-        res.send(messageResponse);
+    validateOrder.isOrderUnique(req).then(function (orderValid) {
 
+        if (orderValid) {
+            var theOrder = req.body;
+            res.send(req.body);
+        }
     }).catch(next);
 });
 
@@ -44,9 +46,9 @@ rOut.put('/PurchasingUpdate/', function (req, res, next) {
  * This returns a view for the staff to see all of a customers orders 
  */
 rOut.get('/displayorders', function (req, res, next) {
-    if(req.query.custoRef != null){
+    if (req.query.custoRef != null) {
 
-    }else{
+    } else {
 
     }
     res.render('viewOrder.pug', { 'products': req.body.products });
@@ -76,7 +78,7 @@ rOut.delete('', function (req, res, next) {
  */
 rOut.get('/UpdateLegancyDatabase', function (req, res, next) {
     res.send();
- 
+
 });
 
 module.exports = rOut;

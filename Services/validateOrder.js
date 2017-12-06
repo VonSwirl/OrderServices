@@ -25,13 +25,13 @@ function isOrderUnique(orderData) {
             Order.count({ orderRef: unique }, function (err, count) {
 
                 if (count > 0) {
-                    resolve('Failed! Reason = Order Already Exists');
+                    reject('Failed! Reason = Order Already Exists');
 
                 } else {
                     orderData.body.orderDate = moment().format('llll');
                     orderData.body.orderRef = unique;
                     checkIfProductsStocked(orderData);
-                    resolve('Order Request Accepted');
+                    resolve(true);
 
                 }
             }).catch(function (err) {
