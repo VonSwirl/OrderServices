@@ -1,6 +1,16 @@
 extends layout
 
 block content
-      h1 Test
-            each products in productList
-                  p= products.name
+    table#myTable
+      thead
+        tr Name
+        tr Quantity Ordered
+        tr Available Shipping
+        tr Price per product
+      tbody
+        each prod in productsList
+          tr
+            td= prod.name
+            td= prod.qtyReq
+            td= prod.nowAvailable
+            td= prod.productPrice

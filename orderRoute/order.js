@@ -38,7 +38,7 @@ rOut.post('/viewProducts/:orderRef', function (req, res, next) {
             count++;
         }, this);
         console.log(count, productsList);
-        res.render('viewProductsInOrder', { productsList: order.products });
+        res.render('viewProductsInOrder', { productsList });
     }).catch(next);
 });
 
