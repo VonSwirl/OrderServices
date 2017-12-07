@@ -1,6 +1,5 @@
 extends layout
 
 block content
-  each order in arr
       h1= order.orderRef
-      h1= order.name
+      h1= order.products[1].name
