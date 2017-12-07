@@ -1,22 +1,24 @@
 extends layout
 
-
 block content
-		h1 Order Service
-			table#myTable
-					thead 
-						tr Order Ref
-						tr Order Status
-						tr Order Date
-						tr Total order price
-					tbody
-						each order in orderList
-							tr
-								td= order.orderRef
-								td= order.orderStatus
-								td= order.orderDate
-								td= order.orderTotal
-								td
-									form( action='/order/viewProducts/'+order.orderRef, method="post")
-										input(type='submit', value='View Order')
-										input(type="hidden", name= order.orderRef, value = order.orderRef)
+  font(size='2')
+    table.table.table-striped#myTable
+        thead
+            tr
+                th Order Ref
+                th Order Status
+                th Order Date
+                th Total Price
+                th View Products In Order
+        tbody
+                each order in orderList
+                    tr
+                    td= order.orderRef
+                    td= order.orderStatus
+                    td= order.orderDate
+                    td= order.orderTotal
+                    td
+                        form( action='/order/viewProducts/'+order.orderRef, method="post")
+                            input(type='submit', value='View Order')
+                            input(type="hidden", name= order.orderRef, value = order.orderRef)
+
