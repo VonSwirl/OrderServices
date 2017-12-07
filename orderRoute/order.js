@@ -28,13 +28,13 @@ rOut.post('/makeOrder', function (req, res, next) {
 //Accesses the db to allow the user or staff to view the customers order history.
 rOut.get('/', function (req, res, next) {
     //res.send({ type: 'PING PONG PING PONG' });
-    Order.find({}, function(err, order){
-        if(err){
-          res.send(err);
+    Order.find({}, function (err, order) {
+        if (err) {
+            res.send(err);
         }
         //send a list of the products through to the front end
-        res.render('viewOrder', { orderList : order });
-    //res.render('viewOrder.pug', { 'products': req.body.products });
+        res.render('viewOrder', { orderList: order });
+        //res.render('viewOrder.pug', { 'products': req.body.products });
     });
 });
 
