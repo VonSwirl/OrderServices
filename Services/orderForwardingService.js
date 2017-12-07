@@ -2,22 +2,27 @@
 var config = require('../config');
 var req = require('request');
 
+/**
+ * @description This function sends a post request to the purchasing service with all the 
+ * missing items from the order that need to be stock to satify the order before it can be forwared
+ * to invoicing service
+ * @param {JSON} missingOrder This data is a nested map of products that require ordering 
+ */
 function sendOrderToPurchasingService(missingOrder) {
     console.log(missingOrder);
     try {
         req.post({
             url: config.purchaseMissingStockURL,
-            body: missingOrder.json,
+            body: missingOrder,
             json: true
 
         }, function (err, res, body) {
             if (err) {
                 console.log('There was an error', err);
-                //console.log(res);
             }
         })
     } catch (err) {
-        console.log('error with letting order service know we have update', err);
+        console.log('error connecting to purchasing service', err);
     }
 }
 

@@ -3,6 +3,7 @@ const express = require('express');
 const rOut = express.Router();
 const validateOrder = require('../Services/validateOrder.js');
 const forwardingService = require('../Services/orderForwardingService.js');
+const legacyHandler = require('../Services/legacyDataManager.js');
 
 //Retrieves values from JSON objects for data binding. 
 //Offers params, nested queries, deep queries, custom reduce/filter functions and simple boolean logic.
@@ -15,10 +16,12 @@ const Order = require('../domainModels/orderModel');
 const moment = require('moment');
 
 rOut.post('/makeOrder', function (req, res, next) {
-    validateOrder.isOrderUnique(req).then(function (messageResponse) {
-        //console.log(messageResponse);
-        res.send(messageResponse);
+    validateOrder.isOrderUnique(req).then(function (orderValid) {
 
+        if (orderValid) {
+            var theOrder = req.body;
+            res.send(req.body);
+        }
     }).catch(next);
 });
 
@@ -74,11 +77,23 @@ rOut.put('/PurchasingUpdate/', function (req, res, next) {
 });
 
 /**
+ * This returns a view for the staff to see all of a customers orders 
+ */
+rOut.get('/displayorders', function (req, res, next) {
+    if (req.query.custoRef != null) {
+
+    } else {
+
+    }
+    res.render('viewOrder.pug', { 'products': req.body.products });
+});
+
+/**
  * This put request receives a update from processing service. The request
  * should contain a customer reference number and also a boolean value.
  * The boolean value sets the customers purchase approvale to true or false
  */
-rOut.put('/CustomerApprovalUpdate/customer?approved=', function (req, res, next) {
+rOut.put('/CustomerApprovalUpdate', function (req, res, next) {
     forwardingService.customerAuthUpdate(req.param.id, req.query.approved)
         .then(function (messageResponse) {
             res.send(messageResponse);
@@ -88,15 +103,18 @@ rOut.put('/CustomerApprovalUpdate/customer?approved=', function (req, res, next)
 
 //Delete available for future use, not required at this stage.
 rOut.delete('', function (req, res, next) {
-    res.send({ type: 'DELETE' });
-
+    res.send(200);
 });
 
 /**
- * @todo Update the legacy DB
+ * Allows the legancy database system access to the mongodb documents
+ * a secret code is handed over for access approval before data is released
  */
-rOut.get('/UpdateLegancyDatabase', function (req, res, next) {
-    res.send();
+rOut.put('/UpdateLegancyDatabase', function (req, res, next) {
+    legacyHandler.pullDataFromMongoDB(req.body.accessCode).then(function (dbData) {
+        res.send(dbData);
+
+    }).catch(next);
 
 });
 

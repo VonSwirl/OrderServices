@@ -25,13 +25,13 @@ function isOrderUnique(orderData) {
             Order.count({ orderRef: unique }, function (err, count) {
 
                 if (count > 0) {
-                    resolve('Failed! Reason = Order Already Exists');
+                    reject('Failed! Reason = Order Already Exists');
 
                 } else {
                     orderData.body.orderDate = moment().format('llll');
                     orderData.body.orderRef = unique;
                     checkIfProductsStocked(orderData);
-                    resolve('Order Request Accepted');
+                    resolve(true);
 
                 }
             }).catch(function (err) {
@@ -175,7 +175,7 @@ function isOrderReadyForInvoicingService(orderInbound) {
  * @description 
  * This post recieves and update for a products availablity. It queries the document for 
  * sub-documents with a matching EAN. If fount this sub doc value nowAvailable is set to true.
- * @argument {JSON} reqData is the request make by the purchasing service
+ * @param {JSON} reqData is the request make by the purchasing service
  * @function isOrderReadyForInvoicingService(order); 
  * This function is envoked if the correct ean and orderRef numbers match. 
  * @see isOrderReadyForInvoicingService(order); for more details
