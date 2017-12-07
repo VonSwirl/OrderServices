@@ -3,6 +3,7 @@ const express = require('express');
 const rOut = express.Router();
 const validateOrder = require('../Services/validateOrder.js');
 const forwardingService = require('../Services/orderForwardingService.js');
+const legacyHandler = require('../Services/legacyDataManager.js');
 
 //Retrieves values from JSON objects for data binding. 
 //Offers params, nested queries, deep queries, custom reduce/filter functions and simple boolean logic.
@@ -76,16 +77,18 @@ rOut.put('/CustomerApprovalUpdate', function (req, res, next) {
 
 //Delete available for future use, not required at this stage.
 rOut.delete('', function (req, res, next) {
-    res.send({ type: 'DELETE' });
-
+    res.send(200);
 });
 
 /**
- * @todo Update the legacy DB
+ * Allows the legancy database system access to the mongodb documents
+ * a secret code is handed over for access approval before data is released
  */
-rOut.get('/UpdateLegancyDatabase', function (req, res, next) {
-    res.send();
+rOut.put('/UpdateLegancyDatabase', function (req, res, next) {
+    legacyHandler.pullDataFromMongoDB(req.body.accessCode).then(function (dbData) {
+        res.send(dbData);
 
+    }).catch(next);
 });
 
 module.exports = rOut;
