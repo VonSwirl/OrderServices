@@ -76,11 +76,7 @@ rOut.put('/PurchasingUpdate/', function (req, res, next) {
  * This returns a view for the staff to see all of a customers orders 
  */
 rOut.get('/displayorders', function (req, res, next) {
-    if (req.query.custoRef != null) {
 
-    } else {
-
-    }
     res.render('viewOrder.pug', { 'products': req.body.products });
 });
 
