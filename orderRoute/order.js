@@ -19,14 +19,14 @@ rOut.post('/makeOrder', function (req, res, next) {
     validateOrder.isOrderUnique(req).then(function (orderValid) {
 
         if (orderValid) {
-            var theOrder = req.body;
-            res.send(req.body);
+            var order = req.body;
+            res.render('viewOrder', { orderList: order });
         }
     }).catch(next);
 });
 
 //Get a single item to be able to edit prices
-rOut.post('/viewProducts/:orderRef', function (req, res, next) {
+rOut.get('/viewProducts/:orderRef', function (req, res, next) {
     var count = 0;
     //Get their current id and compare to check who they are then call another function
     //console.log(req.params.ean);
@@ -40,24 +40,6 @@ rOut.post('/viewProducts/:orderRef', function (req, res, next) {
         console.log(count, productsList);
         res.render('viewProductsInOrder', { productsList });
     }).catch(next);
-});
-
-//Accesses the db to allow the user or staff to view the customers order history.
-// rOut.get('/vieworders', function (req, res, next) {
-//     res.render('viewOrder.pug', { 'products': req.body.products });
-// });
-
-//Accesses the db to allow the user or staff to view the customers order history.
-rOut.get('/', function (req, res, next) {
-    //res.send({ type: 'PING PONG PING PONG' });
-    Order.find({}, function (err, order) {
-        if (err) {
-            res.send(err);
-        }
-        //send a list of the products through to the front end
-        res.render('viewOrder', { orderList: order });
-        //res.render('viewOrder.pug', { 'products': req.body.products });
-    });
 });
 
 /**
@@ -75,13 +57,10 @@ rOut.put('/PurchasingUpdate/', function (req, res, next) {
 /**
  * This returns a view for the staff to see all of a customers orders 
  */
-rOut.get('/displayorders', function (req, res, next) {
-    if (req.query.custoRef != null) {
-
-    } else {
-
-    }
-    res.render('viewOrder.pug', { 'products': req.body.products });
+rOut.get('/displayorders/:custoRef', function (req, res, next) {
+    Order.find({ custoRef: req.params.custoRef }).then(function (order) {
+        res.render('viewOrder', { orderList: order });
+    }).catch(next);
 });
 
 /**

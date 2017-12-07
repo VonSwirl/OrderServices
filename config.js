@@ -1,10 +1,4 @@
 
-
-
-
-//config.sendOrderToInvoicingService = "http://localhost:3007/api/Invoice";
-//config.stockServiceUpdaterURL = ":3001/purchasing/test";
-//config.purchaseMissingStockURL = "http://3amigoso.azurewebsites.net/";
 var development = {
     'databaseURL': 'mongodb://orderServiceUsr:osuser@ds042527.mlab.com:42527/orderservicedb',
 
