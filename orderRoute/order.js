@@ -28,22 +28,18 @@ rOut.post('/makeOrder', function (req, res, next) {
 //Get a single item to be able to edit prices
 rOut.post('/viewProducts/:orderRef', function (req, res, next) {
     var count = 0;
-    console.log('heregdsfsdfgdgfs');
     //Get their current id and compare to check who they are then call another function
     //console.log(req.params.ean);
     Order.findOne({ orderRef: req.params.orderRef }).then(function (order) {
-        // console.log('here');
-        // var arr = [];
-        // var count = 0;
-        // order.products.forEach(function (element) {
-        //     arr.push (order.products[count]);
-        //     count++;
-        // }, this).catch();
-        // console.log(count, element, arr);
-        res.render('viewProductsInOrder', { order : order });
-
-        
-    });
+        var productsList = [];
+        var count = 0;
+        order.products.forEach(() => {
+            productsList.push(order.products[count]);
+            count++;
+        }, this);
+        console.log(count, productsList);
+        res.render('viewProductsInOrder', { productsList: order.products });
+    }).catch(next);
 });
 
 //Accesses the db to allow the user or staff to view the customers order history.

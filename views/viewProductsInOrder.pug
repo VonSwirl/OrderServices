@@ -1,5 +1,6 @@
 extends layout
 
 block content
-      h1= order.orderRef
-      h1= order.products[1].name
+      h1 Test
+            each products in productList
+                  p= products.name
