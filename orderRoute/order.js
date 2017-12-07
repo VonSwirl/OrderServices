@@ -22,21 +22,42 @@ rOut.post('/makeOrder', function (req, res, next) {
     }).catch(next);
 });
 
-//Accesses the db to allow the user or staff to view the customers order history.
-rOut.get('/vieworders', function (req, res, next) {
-    res.render('viewOrder.pug', { 'products': req.body.products });
+//Get a single item to be able to edit prices
+rOut.post('/viewProducts/:orderRef', function (req, res, next) {
+    var count = 0;
+    console.log('heregdsfsdfgdgfs');
+    //Get their current id and compare to check who they are then call another function
+    //console.log(req.params.ean);
+    Order.findOne({ orderRef: req.params.orderRef }).then(function (order) {
+        console.log('here');
+        var arr = [];
+        var count = 0;
+        order.products.forEach(function (element) {
+            arr.push (order.products[count]);
+            count++;
+        }, this);
+        console.log(count, element, arr);
+        res.render('viewProductsInOrder', { arr : order });
+
+        
+    });
 });
+
+//Accesses the db to allow the user or staff to view the customers order history.
+// rOut.get('/vieworders', function (req, res, next) {
+//     res.render('viewOrder.pug', { 'products': req.body.products });
+// });
 
 //Accesses the db to allow the user or staff to view the customers order history.
 rOut.get('/', function (req, res, next) {
     //res.send({ type: 'PING PONG PING PONG' });
-    Order.find({}, function(err, order){
-        if(err){
-          res.send(err);
+    Order.find({}, function (err, order) {
+        if (err) {
+            res.send(err);
         }
         //send a list of the products through to the front end
-        res.render('viewOrder', { orderList : order });
-    //res.render('viewOrder.pug', { 'products': req.body.products });
+        res.render('viewOrder', { orderList: order });
+        //res.render('viewOrder.pug', { 'products': req.body.products });
     });
 });
 
@@ -76,7 +97,7 @@ rOut.delete('', function (req, res, next) {
  */
 rOut.get('/UpdateLegancyDatabase', function (req, res, next) {
     res.send();
- 
+
 });
 
 module.exports = rOut;
