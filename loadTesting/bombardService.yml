@@ -1,3 +1,5 @@
+
+//To run this test open bash/cmd in this directory and run in console; artillery run bombardService.yml
 {
     config: {
         target: "http://localhost:3004/order",

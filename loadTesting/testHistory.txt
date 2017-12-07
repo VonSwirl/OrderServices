@@ -1,0 +1,104 @@
+Started phase 0, duration: 30s @ 17:22:46(+0000) 2017-12-07
+Report @ 17:22:50(+0000) 2017-12-07
+  Scenarios launched:  11
+  Scenarios completed: 11
+  Requests completed:  11
+  RPS sent: 2.56
+  Request latency:
+    min: 71.9
+    max: 423.4
+    median: 127.2
+    p95: 414.2
+    p99: NaN
+  Scenario duration:
+    min: 73.8
+    max: 442.6
+    median: 128.5
+    p95: 432.6
+    p99: NaN
+  Codes:
+    200: 11
+
+Report @ 17:23:00(+0000) 2017-12-07
+  Scenarios launched:  30
+  Scenarios completed: 30
+  Requests completed:  30
+  Concurrent users:    3
+  RPS sent: 2.81
+  Request latency:
+    min: 51.2
+    max: 1292
+    median: 99.8
+    p95: 1246.4
+    p99: NaN
+  Scenario duration:
+    min: 52.5
+    max: 1293.6
+    median: 101.5
+    p95: 1247.5
+    p99: NaN
+  Codes:
+    200: 30
+
+Report @ 17:23:10(+0000) 2017-12-07
+  Scenarios launched:  30
+  Scenarios completed: 30
+  Requests completed:  30
+  RPS sent: 2.81
+  Request latency:
+    min: 52.1
+    max: 168.8
+    median: 74.7
+    p95: 140.5
+    p99: NaN
+  Scenario duration:
+    min: 53.5
+    max: 171.4
+    median: 75.9
+    p95: 142.4
+    p99: NaN
+  Codes:
+    200: 30
+
+Report @ 17:23:16(+0000) 2017-12-07
+  Scenarios launched:  19
+  Scenarios completed: 19
+  Requests completed:  19
+  RPS sent: 2.91
+  Request latency:
+    min: 44.3
+    max: 118.4
+    median: 63.9
+    p95: 114.3
+    p99: NaN
+  Scenario duration:
+    min: 45.5
+    max: 122.9
+    median: 65.4
+    p95: 117.6
+    p99: NaN
+  Codes:
+    200: 19
+
+All virtual users finished
+Summary report @ 17:23:16(+0000) 2017-12-07
+  Scenarios launched:  90
+  Scenarios completed: 90
+  Requests completed:  90
+  RPS sent: 2.98
+  Request latency:
+    min: 44.3
+    max: 1292
+    median: 89.2
+    p95: 525.1
+    p99: 1273.7
+  Scenario duration:
+    min: 45.5
+    max: 1293.6
+    median: 90.7
+    p95: 526.6
+    p99: 1275.2
+  Scenario counts:
+    0: 90 (100%)
+  Codes:
+    200: 90
