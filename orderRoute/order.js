@@ -42,19 +42,6 @@ rOut.get('/viewProducts/:orderRef', function (req, res, next) {
     }).catch(next);
 });
 
-//Accesses the db to allow the user or staff to view the customers order history.
-rOut.get('/', function (req, res, next) {
-    //res.send({ type: 'PING PONG PING PONG' });
-    Order.find({}, function (err, order) {
-        if (err) {
-            res.send(err);
-        }
-        //send a list of the products through to the front end
-        res.render('viewOrder', { orderList: order });
-        //res.render('viewOrder.pug', { 'products': req.body.products });
-    }).catch(next);
-});
-
 /**
  * 
  * This post recieves and update for a products availablity. It queries the document for 
