@@ -1,12 +1,10 @@
+extends layout
 
-doctype html
-html(lang="en")
-		head
-			title Order Service
-			form( action='', method="post")
-		body
-			h1 Order Table
-				table
+
+block content
+		h1 Order Service
+		
+			table
 					thead 
 						tr Order Ref
 						tr Order Status
@@ -20,11 +18,9 @@ html(lang="en")
 								td= order.orderDate
 								td= order.orderTotal
 								td
-									input(type='submit', value='View Order')
-
-
-
-
+									form( action='/order/viewProducts/'+order.orderRef, method="post")
+										input(type='submit', value='View Order')
+										input(type="hidden", name= order.orderRef, value = order.orderRef)
 
 //- doctype html 
 //- 	head 
