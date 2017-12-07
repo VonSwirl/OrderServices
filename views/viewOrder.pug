@@ -1,20 +1,98 @@
-doctype html 
-head 
-    title Order Service 
-body 
-    h1 Order complete 
-    table
-        thead 
-            tr Order Ref
-            tr Order Status
-            tr Total order price
-        tbody
-            each order in orderList
-                tr
-                    td= order.orderRef
-                    td= order.orderStatus
-                    td= order.orderTotal
-                    td= order.products[0].ean
+
+doctype html
+html(lang="en")
+		head
+			title Order Service
+			form( action='', method="post")
+		body
+			h1 Order Table
+				table
+					thead 
+						tr Order Ref
+						tr Order Status
+						tr Order Date
+						tr Total order price
+					tbody
+						each order in orderList
+							tr
+								td= order.orderRef
+								td= order.orderStatus
+								td= order.orderDate
+								td= order.orderTotal
+								td
+									input(type='submit', value='View Order')
 
 
+
+
+
+//- doctype html 
+//- 	head 
+//- 		title Order Service
+//- 	body 
+//- 	h1 Order complete 
+//- 		table
+//- 			thead 
+//- 				tr Order Ref
+//- 				tr Order Status
+//- 				tr Order Date
+//- 				tr Total order price
+//- 			tbody
+//- 				each order in orderList
+//- 					tr
+//- 						td= order.orderRef
+//- 						td= order.orderStatus
+//- 						td= order.orderDate
+//- 						td= order.orderTotal
+//- 						td
+//- 							button(onclick='buttonPress()') View order
+				
+					
+
+//- {
+//-     "_id": {
+//-         "$oid": "5a26aff6c3739600056e1317"
+//-     },
+//-     "custoRef": "test@test.com",
+//-     "orderDate": {
+//-         "$date": "2017-12-05T14:40:00.000Z"
+//-     },
+//-     "orderRef": "test@test.com051217240",
+//-     "orderTotal": 270,
+//-     "stocked": false,
+//-     "orderStatus": "Waiting for Stock",
+//-     "products": [
+//-         {
+//-             "ean": "CG1",
+//-             "name": "Nut",
+//-             "qtyReq": 1,
+//-             "productPrice": 40,
+//-             "_id": {
+//-                 "$oid": "5a26aff6c3739600056e131a"
+//-             },
+//-             "nowAvailable": true
+//-         },
+//-         {
+//-             "ean": "CG2",
+//-             "name": "Sling",
+//-             "qtyReq": 22,
+//-             "productPrice": 1,
+//-             "_id": {
+//-                 "$oid": "5a26aff6c3739600056e1319"
+//-             },
+//-             "nowAvailable": false
+//-         },
+//-         {
+//-             "ean": "HG2",
+//-             "name": "Soap",
+//-             "qtyReq": 52,
+//-             "productPrice": 4,
+//-             "_id": {
+//-                 "$oid": "5a26aff6c3739600056e1318"
+//-             },
+//-             "nowAvailable": false
+//-         }
+//-     ],
+//-     "__v": 0
+//- }
 
